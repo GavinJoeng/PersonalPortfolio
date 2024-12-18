@@ -63,3 +63,76 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }
     });
 });
+
+
+// 獲取resume信息
+document.addEventListener("DOMContentLoaded",getResumeInfo);
+
+
+function getResumeInfo() {
+    const apiUrl = "http://127.0.0.1:5000/api/getResumeInfo?user_id=1"; // 後端 JSON 接口
+
+    fetch("http://127.0.0.1:5000/api/getResumeInfo?user_id=1", {
+        method: "GET",
+        mode: "cors",  // 啟用跨域
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Fetched Data:", data); // 檢查數據結構
+
+            // 個人資料部分 (確保字段存在)
+            const profile = data.profile || {};
+            document.getElementById("name").textContent = profile.name || "N/A";
+            document.getElementById("title").textContent = profile.title || "N/A";
+            document.getElementById("email").textContent = profile.email || "N/A";
+            document.getElementById("email").href = profile.email ? `mailto:${profile.email}` : "#";
+            document.getElementById("phone").textContent = profile.phone || "N/A";
+            document.getElementById("location").textContent = profile.location || "N/A";
+            document.getElementById("profile-picture").src = profile.profilePicture || "placeholder.jpg";
+
+            // 更新 Summary
+            document.getElementById("summary").textContent = data.summary || "No summary available.";
+
+            // 更新 Work Experience
+            const workExperienceContainer = document.getElementById("work-experience");
+            workExperienceContainer.innerHTML = ""; // 清空
+            (data.workExperience || []).forEach(exp => {
+                const html = `
+                <div>
+                    <h4>${exp.role || "N/A"}</h4>
+                    <p>${exp.company || "N/A"} | ${exp.time || "N/A"}</p>
+                    <ul>
+                        ${(exp.responsibilities || []).map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </div>`;
+                workExperienceContainer.insertAdjacentHTML("beforeend", html);
+            });
+
+            // 更新 Education
+            const education = data.education || {};
+            document.getElementById("education-degree").textContent = education.degree || "N/A";
+            document.getElementById("education-time").textContent = `${education.university || "N/A"} | ${education.time || "N/A"}`;
+            document.getElementById("education-details").textContent = `Relevant coursework: ${education.coursework || "N/A"}`;
+
+            // 更新 Skills
+            const skillsList = document.getElementById("skills-list");
+            skillsList.innerHTML = ""; // 清空
+            (data.skills || []).forEach(skill => {
+                const li = document.createElement("li");
+                li.textContent = skill;
+                skillsList.appendChild(li);
+            });
+        })
+        .catch(error => {
+            console.error("Error fetching resume data:", error);
+            document.getElementById("summary").textContent = "Failed to load resume data.";
+        });
+}

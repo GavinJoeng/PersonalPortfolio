@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    <link href="css/output.css" rel="stylesheet">
+</head>
+<body class="container">
+    <nav class="navbar">
+        <ul class="navbar-list">
+            <li><a href="index.html" class="nav-link">Home</a></li>
+            <li><a href="projects.html" class="nav-link">Projects</a></li>
+            <li><a href="resume.html" class="nav-link">Resume</a></li>
+            <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+            <li><a href="login.html" class="navbar-login">Login</a></li>
+            <li><a href="signup.html" class="navbar-signup">Sign Up</a></li>
+        </ul>
+    </nav>
+
+<div class="main-container">
+    <section id="resume" class="content-section">
+        <h2 class="heading-h1 text-center">My Resume</h2>
+        <div class="resume-card">
+            <div id="resume-header">
+                <img id="profile-picture" src="/placeholder.svg" alt="John Doe">
+                <h3 id="name">John Doe</h3>
+                <p id="title">Senior Web Developer</p>
+                <a id="email" href="mailto:john.doe@example.com">john.doe@example.com</a>
+                <p id="phone">(123) 456-7890</p>
+                <p id="location">New York, NY</p>
+            </div>
+
+            <div id="summary-section">
+                <h3>Summary</h3>
+                <p id="summary">...</p>
+            </div>
+
+            <div id="work-experience">
+                <!-- 工作經歷將動態插入 -->
+            </div>
+
+            <div id="education-section">
+                <h3>Education</h3>
+                <h4 id="education-degree"></h4>
+                <p id="education-time"></p>
+                <p id="education-details"></p>
+            </div>
+
+            <div id="skills-section">
+                <h3>Skills</h3>
+                <ul id="skills-list"></ul>
+            </div>
+        </div>
+
+        <div class="back-home-banner" id="backHome">
+            <button class="back-home-button" id="backHomeButton">Return to Home</button>
+            <button id="edit-resume-btn" class="resume-edit-button">Edit Resume</button>
+        </div>
+
+    </section>
+</div>
+
+<!-- Edit Resume Modal -->
+<div id="edit-modal" class="modal-overlay">
+    <div class="modal-container">
+        <h3 class="heading-h2">Edit Resume</h3>
+        <form id="edit-form" class="space-y-4">
+            <div>
+                <label for="edit-name" class="form-label">Name</label>
+                <input type="text" id="edit-name" name="name" class="form-input">
+            </div>
+            <div>
+                <label for="edit-email" class="form-label">Email</label>
+                <input type="email" id="edit-email" name="email" class="form-input">
+            </div>
+            <div>
+                <label for="edit-phone" class="form-label">Phone</label>
+                <input type="tel" id="edit-phone" name="phone" class="form-input">
+            </div>
+            <div>
+                <label for="edit-location" class="form-label">Location</label>
+                <input type="text" id="edit-location" name="location" class="form-input">
+            </div>
+            <div>
+                <label for="edit-summary" class="form-label">Summary</label>
+                <textarea id="edit-summary" name="summary" rows="4" class="form-input"></textarea>
+            </div>
+            <div>
+                <label for="edit-experience" class="form-label">Work Experience</label>
+                <textarea id="edit-experience" name="experience" rows="6" class="form-input"></textarea>
+            </div>
+            <div>
+                <label for="edit-education" class="form-label">Education</label>
+                <textarea id="edit-education" name="education" rows="4" class="form-input"></textarea>
+            </div>
+            <div>
+                <label for="edit-skills" class="form-label">Skills (comma-separated)</label>
+                <input type="text" id="edit-skills" name="skills" class="form-input">
+            </div>
+            <div>
+                <label for="edit-profile-picture" class="form-label">Profile Picture</label>
+                <input type="file" id="edit-profile-picture" name="profile-picture" accept="image/*" class="form-input">
+            </div>
+            <div class="edit-footer">
+                <button type="button" id="cancel-edit" class="cancel-button">Cancel</button>
+                <button type="submit" class="form-button">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="js/resume.js"></script>
+</body>
+</html>
+
