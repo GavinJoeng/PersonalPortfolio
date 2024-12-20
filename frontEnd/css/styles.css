@@ -86,6 +86,7 @@
 /*h3*/
 .heading-h3 {
     @apply text-2xl font-semibold mb-2;
+    @apply text-gray-300; /* 或其他你需要的顏色 */
 }
 /*font*/
 .paragraph-font {
@@ -172,6 +173,34 @@
 .resume-section-subhead {
     @apply text-xl font-semibold;
 }
+
+/* 標籤樣式 */
+.resume-subform-label {
+    @apply text-sm font-medium flex-1 text-left text-gray-300; /* 原有樣式 */
+}
+
+/* 輸入框樣式 */
+.resume-subform-input {
+    @apply mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white text-base placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500;
+}
+
+/* 父容器樣式 */
+.form-container {
+    @apply p-6 bg-gray-800 rounded-lg shadow-lg space-y-6;
+}
+
+/* 工作經歷區域 */
+.experience-entry {
+    @apply grid grid-cols-2 gap-4 items-center; /* 一行兩列布局 */
+}
+
+/* 按鈕容器 */
+.flex-container {
+    @apply flex items-center gap-4; /* 水平排列並保持間距 */
+}
+
+
+
 .resume-list-text {
     @apply list-disc list-inside text-gray-300 space-y-1;
 }
@@ -194,9 +223,11 @@
 .back-home-button {
     @apply bg-gray-600 text-white px-6 py-3 rounded-full hover:bg-gray-700 transition-colors;
 }
+
 .resume-edit-button {
-    @apply bg-blue-500 text-white px-6 py-3 rounded-full hover:bg-blue-600 transition-colors;
+    @apply bg-blue-500 text-white px-6 py-3 rounded-full hover:bg-blue-600 transition-colors mt-3;
 }
+
 
 /*Edit resume style*/
 .modal-overlay {

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Portfolio</title>
-    <link href="css/output.css" rel="stylesheet">
+    <link href="./css/output.css?v=1.0" rel="stylesheet">
 </head>
 <body class="container">
     <nav class="navbar">
@@ -23,12 +23,7 @@
         <h2 class="heading-h1 text-center">My Resume</h2>
         <div class="resume-card">
             <div id="resume-header">
-                <img id="profile-picture" src="/placeholder.svg" alt="John Doe">
-                <h3 id="name">John Doe</h3>
-                <p id="title">Senior Web Developer</p>
-                <a id="email" href="mailto:john.doe@example.com">john.doe@example.com</a>
-                <p id="phone">(123) 456-7890</p>
-                <p id="location">New York, NY</p>
+                <h3>Personal profile</h3>
             </div>
 
             <div id="summary-section">
@@ -67,39 +62,57 @@
         <h3 class="heading-h2">Edit Resume</h3>
         <form id="edit-form" class="space-y-4">
             <div>
-                <label for="edit-name" class="form-label">Name</label>
+                <label for="edit-name" class="heading-h3">Name</label>
                 <input type="text" id="edit-name" name="name" class="form-input">
             </div>
             <div>
-                <label for="edit-email" class="form-label">Email</label>
+                <label for="edit-email" class="heading-h3">Email</label>
                 <input type="email" id="edit-email" name="email" class="form-input">
             </div>
             <div>
-                <label for="edit-phone" class="form-label">Phone</label>
+                <label for="edit-phone" class="heading-h3">Phone</label>
                 <input type="tel" id="edit-phone" name="phone" class="form-input">
             </div>
             <div>
-                <label for="edit-location" class="form-label">Location</label>
+                <label for="edit-location" class="heading-h3">Location</label>
                 <input type="text" id="edit-location" name="location" class="form-input">
             </div>
             <div>
-                <label for="edit-summary" class="form-label">Summary</label>
+                <label for="edit-summary" class="heading-h3">Summary</label>
                 <textarea id="edit-summary" name="summary" rows="4" class="form-input"></textarea>
             </div>
+            <!-- 工作經歷區域 -->
             <div>
-                <label for="edit-experience" class="form-label">Work Experience</label>
-                <textarea id="edit-experience" name="experience" rows="6" class="form-input"></textarea>
+                <label class="heading-h3">Work Experience</label>
+                <div id="edit-experience"></div>
+                <button id="add-work-experience" class="resume-edit-button">Add Work Experience</button>
             </div>
+            <!-- 教育經歷區域 -->
             <div>
-                <label for="edit-education" class="form-label">Education</label>
-                <textarea id="edit-education" name="education" rows="4" class="form-input"></textarea>
+                <label class="heading-h3">Education</label>
+                <div id="edit-education"></div>
+                <button id="add-education" class="resume-edit-button">Add Education Experience</button>
             </div>
+            <!--技能區域-->
             <div>
-                <label for="edit-skills" class="form-label">Skills (comma-separated)</label>
-                <input type="text" id="edit-skills" name="skills" class="form-input">
+                <label for="edit-skills" class="heading-h3">Skills</label>
+                <input type="text" id="edit-skills" name="skills" class="form-input" placeholder="(comma-separated)">
             </div>
+
+
+<!--            <div>-->
+<!--                <label class="form-label">Work Experience</label>-->
+<!--                <div id="edit-experience"></div>-->
+<!--                <button id="add-work-experience" class="resume-edit-button">Add Work Experience</button>-->
+<!--            </div>-->
+<!--            <div>-->
+<!--                <label for="edit-education" class="form-label">Education</label>-->
+<!--                <div id="education-container"></div>-->
+<!--                <textarea id="edit-education" name="education" rows="4" class="form-input"></textarea>-->
+<!--            </div>-->
+
             <div>
-                <label for="edit-profile-picture" class="form-label">Profile Picture</label>
+                <label for="edit-profile-picture" class="heading-h3">Profile Picture</label>
                 <input type="file" id="edit-profile-picture" name="profile-picture" accept="image/*" class="form-input">
             </div>
             <div class="edit-footer">
