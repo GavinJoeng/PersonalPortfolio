@@ -20,6 +20,7 @@ class resume_service:
             # 返回 resume_model 對象
             return resume_model(
                 name=result["name"],
+                title=result["title"],
                 email=result["email"],
                 phone=result["phone"],
                 location=result["location"],

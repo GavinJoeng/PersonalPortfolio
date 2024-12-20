@@ -2,7 +2,7 @@ from config.db_config import get_db_connection
 
 class resume_dao:
     GET_RESUME_QUERY = """
-        SELECT name, email, phone, location, summary, 
+        SELECT name, title, email, phone, location, summary, 
                experience, education, skills, profile_photo_url
         FROM resume 
         WHERE user_id = %s AND is_active = 1

@@ -1,6 +1,7 @@
 class resume_model:
-    def __init__(self, name, email, phone, location, summary, experience, education, skills, profile_photo_url):
+    def __init__(self, name, title, email, phone, location, summary, experience, education, skills, profile_photo_url):
         self.name = name
+        self.title = title
         self.email = email
         self.phone = phone
         self.location = location
@@ -13,6 +14,7 @@ class resume_model:
     def to_dict(self):
         return {
             "name": self.name,
+            "title": self.title,
             "email": self.email,
             "phone": self.phone,
             "location": self.location,
