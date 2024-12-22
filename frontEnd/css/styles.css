@@ -115,6 +115,11 @@
     @apply bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700 transition-colors;
 }
 
+.cancel-skills-button {
+    @apply bg-gray-600 text-white py-1 px-3 rounded hover:bg-gray-700 transition duration-300 ease-in-out shadow sm:py-2 sm:px-4;
+}
+
+
 .submit-button {
     @apply bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors;
 }
@@ -189,10 +194,35 @@
     @apply p-6 bg-gray-800 rounded-lg shadow-lg space-y-6;
 }
 
-/* 工作經歷區域 */
-.experience-entry {
+/* two columns layout 一行兩列布局 */
+.two-columns-layout {
     @apply grid grid-cols-2 gap-4 items-center; /* 一行兩列布局 */
 }
+
+
+/* 每个技能块的布局 */
+.three-columns-layout {
+    @apply flex flex-col items-start gap-2; /* 纵向布局，子元素垂直排列 */
+}
+
+/* 标签样式 */
+.resume-skills-label {
+    @apply text-sm font-medium text-left text-gray-300; /* 标签左对齐 */
+}
+
+/* 输入框样式 */
+.resume-skills-input {
+    @apply block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500;
+    height: 2.5rem; /* 输入框高度保持一致 */
+}
+
+/* 删除按钮样式 */
+.cancel-skills-button {
+    @apply bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition duration-300 ease-in-out shadow;
+    height: 2.5rem; /* 高度与输入框一致 */
+    width: 100%; /* 宽度占满所在列 */
+}
+
 
 /* 按鈕容器 */
 .flex-container {

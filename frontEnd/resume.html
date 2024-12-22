@@ -66,6 +66,10 @@
                 <input type="text" id="edit-name" name="name" class="form-input">
             </div>
             <div>
+                <label for="edit-title" class="heading-h3">Title</label>
+                <input type="text" id="edit-title" name="title" class="form-input">
+            </div>
+            <div>
                 <label for="edit-email" class="heading-h3">Email</label>
                 <input type="email" id="edit-email" name="email" class="form-input">
             </div>
@@ -95,25 +99,15 @@
             </div>
             <!--技能區域-->
             <div>
-                <label for="edit-skills" class="heading-h3">Skills</label>
-                <input type="text" id="edit-skills" name="skills" class="form-input" placeholder="(comma-separated)">
+                <label class="heading-h3">Skills</label>
+                <div id="edit-skills"></div>
+                <button id="add-skills" class="resume-edit-button">Add Skills</button>
             </div>
-
-
-<!--            <div>-->
-<!--                <label class="form-label">Work Experience</label>-->
-<!--                <div id="edit-experience"></div>-->
-<!--                <button id="add-work-experience" class="resume-edit-button">Add Work Experience</button>-->
-<!--            </div>-->
-<!--            <div>-->
-<!--                <label for="edit-education" class="form-label">Education</label>-->
-<!--                <div id="education-container"></div>-->
-<!--                <textarea id="edit-education" name="education" rows="4" class="form-input"></textarea>-->
-<!--            </div>-->
 
             <div>
                 <label for="edit-profile-picture" class="heading-h3">Profile Picture</label>
                 <input type="file" id="edit-profile-picture" name="profile-picture" accept="image/*" class="form-input">
+                <button id="upload-button" class="resume-edit-button">Upload</button>
             </div>
             <div class="edit-footer">
                 <button type="button" id="cancel-edit" class="cancel-button">Cancel</button>
