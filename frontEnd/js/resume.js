@@ -1,4 +1,8 @@
+let tempPictureId = null; // 儲存臨時圖片 ID
+
 document.addEventListener('DOMContentLoaded', (event) => {
+
+
 
     //編輯和添加工作經歷
     let workExperienceData = [];
@@ -110,18 +114,61 @@ document.addEventListener('DOMContentLoaded', (event) => {
     // });
 
 
+
     // Profile picture upload functionality
-    const profilePictureInput = document.getElementById('edit-profile-picture');
-    profilePictureInput.addEventListener('change', function (e) {
-        const file = e.target.files[0];
+    const profilePictureInput = document.querySelector('#edit-profile-picture');
+    const profileUploadButton = document.querySelector('#upload-button');
+    const previewImage = document.querySelector('#preview-image');
+
+    // 監聽文件輸入框的變化事件
+    profilePictureInput.addEventListener('change', (event) => {
+        const file = event.target.files[0]; // 獲取選中的文件
         if (file) {
             const reader = new FileReader();
             reader.onload = function (e) {
-                document.getElementById('profile-picture').src = e.target.result;
+                // 將圖片的 Base64 URL 設置為預覽圖片的 src
+                previewImage.src = e.target.result;
+                previewImage.style.display = 'block'; // 顯示圖片
+            };
+            reader.onerror = function () {
+                alert('Error reading file!'); // 處理讀取錯誤
+            };
+            reader.readAsDataURL(file); // 將文件讀取為 Base64 格式
+        } else {
+            // 如果用戶取消選擇文件，清空預覽圖片
+            previewImage.src = '';
+            previewImage.style.display = 'none'; // 隱藏圖片
+        }
+    });
+
+
+
+    profileUploadButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        const file = profilePictureInput.files[0];
+        uploadFile(
+            file,
+            'http://127.0.0.1:5000/api/uploadTemp', // 上傳臨時文件的接口
+            'profile-picture', // 文件字段名稱
+            function onSuccess(data) {
+                tempPictureId = data.temp_id || null;
+                alert('Upload successful: ' + (tempPictureId ? `Temp ID: ${tempPictureId}` : 'No new file uploaded.'));
+            },
+            function onError(error) {
+                alert('Upload failed: ' + error);
+            }
+        );
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('edit-profile-picture').src = e.target.result;
             }
             reader.readAsDataURL(file);
         }
-    });
+
+
+    })
 
 
     // 提交 resume
@@ -146,6 +193,43 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 
 });
+
+/**
+ * 通用文件上傳方法
+ * @param {File} file - 用戶選擇的文件（可為 null）
+ * @param {string} uploadUrl - 上傳文件的後端 API 地址
+ * @param {string} fieldName - 上傳文件的字段名稱（默認為 'file'）
+ * @param {function} onSuccess - 成功回調，返回後端數據
+ * @param {function} onError - 錯誤回調，返回錯誤信息
+ */
+function uploadFile(file, uploadUrl, fieldName = 'file', onSuccess, onError) {
+    if (!file) {
+        // 如果文件為空，表示用戶未更改文件
+        onSuccess && onSuccess({ success: true, message: 'No file uploaded, using existing file.' });
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append(fieldName, file);
+
+    fetch(uploadUrl, {
+        method: 'POST',
+        body: formData,
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.success) {
+                onSuccess && onSuccess(data);
+            } else {
+                onError && onError(data.error || 'Upload failed');
+            }
+        })
+        .catch((error) => {
+            console.error('Upload error:', error);
+            onError && onError('An error occurred during upload');
+        });
+}
+
 
 // 渲染技能列表
 function renderSkills(skillsData, editSkillsContainer) {
@@ -350,6 +434,7 @@ function updateData(e, dataArray, renderFunction, container) {
  */
 function collectFormData(workExperienceData, educationData, skillsData) {
 
+    console.log(tempPictureId);
     return {
         name: document.getElementById('edit-name').value,
         title: document.getElementById('edit-title').value,
@@ -361,7 +446,8 @@ function collectFormData(workExperienceData, educationData, skillsData) {
         education: educationData,
         skills: skillsData,
         //TODO: 照片上傳功能
-        profile_photo_url: document.getElementById('edit-profile-picture').value,
+
+        profile_photo: tempPictureId, // 添加臨時圖片 ID（如果有）
     };
 }
 
@@ -532,8 +618,10 @@ function getResumeInfo() {
             const headerHTML = `
                 <div class="resume-header">
                     <div class="resume-photo-name">
-                        <img id="profile-picture" src="${profile.profile_photo_url || '/placeholder.svg'}?height=150&width=150" 
-                             alt="${profile.name || 'N/A'}" class="resume-photo">
+                        <img id="profile-picture" 
+                             src="${profile.profile_photo || '/placeholder.svg'}" 
+                             alt="${profile.name || 'N/A'}" 
+                             class="resume-photo">
                         <div>
                             <h3 class="resume-name-font">${profile.name || 'N/A'}</h3>
                             <p class="resume-title">${profile.title || 'N/A'}</p>
