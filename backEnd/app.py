@@ -7,7 +7,7 @@ app = Flask(__name__)
 # 啟用 CORS 支持，指定允許的來源
 CORS(app, resources={
     r"/api/*": {
-        "origins": "http://localhost:8080",
+        "origins": ["http://localhost:8080", "http://localhost:63342"],
         "methods": ["GET", "POST", "OPTIONS"],
         "allow_headers": ["Content-Type"]
     }

@@ -19,18 +19,43 @@ class resume_service:
 
             # 返回 resume_model 對象
             return resume_model(
-                name=result["name"],
-                title=result["title"],
-                email=result["email"],
-                phone=result["phone"],
-                location=result["location"],
-                summary=result["summary"],
+                name=result.get("name", ""),
+                title=result.get("title", ""),
+                email=result.get("email", ""),
+                phone=result.get("phone", ""),
+                user_id=result.get("user_id", ""),
+                location=result.get("location", ""),
+                summary=result.get("summary", ""),
                 experience=experience,
                 education=education,
                 skills=skills,
-                profile_photo_url=result["profile_photo_url"]
+                profile_photo_url=result.get("profile_photo_url", "")
             )
         return None
 
+    def save_resume_info(self, resume_data):
+
+        print('Service: Resume info saved: {}'.format(resume_data))
+        # 根據 email 獲取 user_id，如果不存在則創建新的用戶
+        # TODO:登陸系統中獲取,暫時使用email
+        if "email" in resume_data:
+            user_id = self.dao.get_user_id_by_email(resume_data["email"])
+            if not user_id:
+                # 如果根據 email 無法找到 user_id，創建新用戶並獲取其 user_id
+                user_id = self.dao.create_user_by_email(resume_data["email"])
+                if not user_id:
+                    print("Failed to create new user.")
+                    return False
+            resume_data["user_id"] = user_id
+
+        # 確保 resume_data 中包含完整的 user_id 後，執行保存邏輯
+        resume = resume_model.from_dict(resume_data)
+        resume_dict = resume.to_dict()
+        resume_dict["experience"] = json.dumps(resume.experience)
+        resume_dict["education"] = json.dumps(resume.education)
+        resume_dict["skills"] = json.dumps(resume.skills)
+
+        # 保存簡歷信息（如果存在則更新，不存在則插入）
+        return self.dao.save_resume_info(resume_dict)
 
 
