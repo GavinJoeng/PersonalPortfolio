@@ -1,6 +1,9 @@
+from distutils.command.upload import upload
+
 from flask import Flask
 from flask_cors import CORS
 from controllers.resume_controller import resume_bp
+from controllers.upload_controller import upload_bp
 
 app = Flask(__name__)
 
@@ -17,6 +20,7 @@ CORS(app, resources={
 def create_app():
     app = Flask(__name__)
     app.register_blueprint(resume_bp, url_prefix="/api")
+    app.register_blueprint(upload_bp, url_prefix="/api")
     return app
 
 

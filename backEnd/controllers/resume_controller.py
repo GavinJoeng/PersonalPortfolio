@@ -22,7 +22,7 @@ def get_resume():
         # 調用服務層獲取數據
         resume = resume_service.get_resume_info(user_id)
         if resume:
-            print(resume.to_dict())
+            # print(resume.to_dict())
             return jsonify(resume.to_dict()), 200
         return jsonify({"error": "Resume not found"}), 404
     except Exception as e:
@@ -34,10 +34,13 @@ def get_resume():
 @cross_origin()
 def save_resume_info():
     resume_data = request.json
-    print('Controller: Resume info saved: {}'.format(resume_data))
+    # print('Controller: Resume info saved: {}'.format(resume_data))
     if not resume_data:
         return jsonify({"status": "error", "message": "No data provided"}), 400
 
     if resume_service.save_resume_info(resume_data):
         return jsonify({"status": "success", "message": "Resume updated successfully"}), 200
     return jsonify({"status": "error", "message": "Failed to save resume"}), 500
+
+
+

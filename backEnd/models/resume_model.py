@@ -1,5 +1,5 @@
 class resume_model:
-    def __init__(self, name, title, email, user_id, phone, location, summary, experience, education, skills, profile_photo_url):
+    def __init__(self, name, title, email, user_id, phone, location, summary, experience, education, skills, profile_photo, profile_photo_mime_type):
         self.name = name
         self.title = title
         self.email = email
@@ -10,7 +10,8 @@ class resume_model:
         self.experience = experience
         self.education = education
         self.skills = skills
-        self.profile_photo_url = profile_photo_url
+        self.profile_photo = profile_photo
+        self.profile_photo_mime_type = profile_photo_mime_type
 
     @classmethod
     def from_dict(cls, data):
@@ -25,7 +26,8 @@ class resume_model:
             experience=data.get("experience", []),
             education=data.get("education", []),
             skills=data.get("skills", []),
-            profile_photo_url=data.get("profile_photo_url", "")
+            profile_photo=data.get("profile_photo", ""),
+            profile_photo_mime_type=data.get("profile_photo_mime_type", "")
         )
 
     def update_from_dict(self, data):

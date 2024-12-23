@@ -1,10 +1,11 @@
 from config.db_config import get_db_connection
 import logging
+import base64
 
 class resume_dao:
     GET_RESUME_QUERY = """
         SELECT name, title, email, phone, location, summary, 
-               experience, education, skills, profile_photo_url
+               experience, education, skills, profile_photo, profile_photo_mime_type
         FROM resume 
         WHERE user_id = %s AND is_active = 1
         ORDER BY version DESC 
@@ -22,13 +23,14 @@ class resume_dao:
             experience = %(experience)s, 
             education = %(education)s, 
             skills = %(skills)s, 
-            profile_photo_url = %(profile_photo_url)s
+            profile_photo = %(profile_photo)s,
+            profile_photo_mime_type = %(profile_photo_mime_type)s
         WHERE user_id = %(user_id)s AND is_active = 1
     """
 
     INSERT_RESUME_DATA = """
-        INSERT INTO resume (user_id, name, title, email, phone, location, summary, experience, education, skills, profile_photo_url)
-        VALUES (%(user_id)s, %(name)s, %(title)s, %(email)s, %(phone)s, %(location)s, %(summary)s, %(experience)s, %(education)s, %(skills)s, %(profile_photo_url)s)
+        INSERT INTO resume (user_id, name, title, email, phone, location, summary, experience, education, skills, profile_photo)
+        VALUES (%(user_id)s, %(name)s, %(title)s, %(email)s, %(phone)s, %(location)s, %(summary)s, %(experience)s, %(education)s, %(skills)s, %(profile_photo)s, %(profile_photo_mime_type)s)
     """
 
     def get_resume_info(self, user_id):
@@ -97,3 +99,19 @@ class resume_dao:
         except Exception as e:
             logging.error(f"Error fetching user_id by email: {e}")
             return None
+
+
+
+def main():
+    dao = resume_dao()
+    user_id = 1
+    result = dao.get_resume_info(user_id)
+    profile_photo = result.get("profile_photo")
+    decoded_photo = base64.b64decode(profile_photo)
+    with open("output_photo.jpg", "wb") as f:
+        f.write(decoded_photo)
+    print("Photo successfully saved as 'output_photo.jpg'")
+
+
+if __name__ == '__main__':
+    main()
