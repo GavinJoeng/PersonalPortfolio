@@ -38,8 +38,15 @@ def save_resume_info():
     if not resume_data:
         return jsonify({"status": "error", "message": "No data provided"}), 400
 
-    if resume_service.save_resume_info(resume_data):
-        return jsonify({"status": "success", "message": "Resume updated successfully"}), 200
+    # 保存數據，並嘗試獲取更新後的數據
+    updated_resume = resume_service.save_resume_info(resume_data)
+
+    if updated_resume:
+        return jsonify({
+            "status": "success",
+            "message": "Resume updated successfully",
+            "data": updated_resume.to_dict()  # 返回更新後的數據
+        }), 200
     return jsonify({"status": "error", "message": "Failed to save resume"}), 500
 
 

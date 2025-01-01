@@ -45,7 +45,7 @@ class resume_dao:
                     cursor.fetchall()  # 確保清空游標中剩餘的結果
                     return result if result else None
         except Exception as e:
-            logging.error(f"Database query failed: {e}")
+            print(f"Database query failed: {e}")
             return None
 
     def save_resume_info(self, resume_data):
@@ -59,16 +59,22 @@ class resume_dao:
                     record_exists = self.record_exists(cursor, resume_data["user_id"])
                     if record_exists:
                         logging.info("Executing UPDATE operation.")
-                        cursor.execute(self.UPDATE_RESUME_DATA, resume_data)
+                        query, params = generate_update_query(resume_data)
+                        cursor.execute(query, params)
                     else:
                         logging.info("Executing INSERT operation.")
-                        cursor.execute(self.INSERT_RESUME_DATA, resume_data)
+                        query, params = generate_insert_query(resume_data)
+                        cursor.execute(query, params)
 
                     # 提交更改
                     connection.commit()
                     return True
         except Exception as e:
-            logging.error(f"Error saving resume data: {e}")
+            print(f"Error saving resume data: {e}")
+            try:
+                connection.rollback()  # 如果提交失敗，進行回滾
+            except Exception as rollback_error:
+                print(f"Rollback failed: {rollback_error}")
             return False
 
     def record_exists(self, cursor, user_id):
@@ -99,6 +105,45 @@ class resume_dao:
         except Exception as e:
             logging.error(f"Error fetching user_id by email: {e}")
             return None
+
+def generate_update_query(data, table_name="resume", condition="user_id = %(user_id)s AND is_active = 1"):
+    base_query = f"UPDATE {table_name} SET "
+    update_fields = []
+    params = {}
+
+    # 遍歷數據動態添加字段
+    for key, value in data.items():
+        if key not in ("user_id", "is_active") and value is not None:  # 排除條件字段和空值
+            update_fields.append(f"{key} = %({key})s")
+            params[key] = value
+
+    if not update_fields:
+        raise ValueError("No fields to update.")
+
+    # 添加條件字段
+    params["user_id"] = data["user_id"]
+
+    # 組合查詢
+    query = base_query + ", ".join(update_fields) + f" WHERE {condition}"
+    return query, params
+
+
+def generate_insert_query(data, table_name="resume"):
+    keys = []
+    values = []
+    params = {}
+
+    for key, value in data.items():
+        if value is not None:  # 避免插入空值
+            keys.append(key)
+            values.append(f"%({key})s")
+            params[key] = value
+
+    if not keys:
+        raise ValueError("No fields to insert.")
+
+    query = f"INSERT INTO {table_name} ({', '.join(keys)}) VALUES ({', '.join(values)})"
+    return query, params
 
 
 

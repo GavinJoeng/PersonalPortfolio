@@ -27,3 +27,4 @@ class Container(containers.DeclarativeContainer):
     projects_service = providers.Factory(projects_service, dao=projects_dao)
     upload_service = providers.Factory(upload_service, dao=upload_dao)
     login_service = providers.Factory(login_service, dao=login_dao)
+
