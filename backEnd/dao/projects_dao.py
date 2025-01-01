@@ -15,6 +15,10 @@ class projects_dao:
             SELECT user_id, project_id, title, description, project_photo, project_photo_mime_type FROM projects WHERE user_id = %s LIMIT 4
         """
 
+    GET_ALL_PROJECTS_QUERY = """
+            SELECT user_id, project_id, title, description, project_photo, project_photo_mime_type FROM projects WHERE user_id = %s 
+    """
+
 
     def get_project(self, project_id, user_id):
         try:
@@ -63,6 +67,17 @@ class projects_dao:
             with get_db_connection() as connection:
                 with connection.cursor(dictionary=True) as cursor:
                     cursor.execute(self.GET_PROJECTS_QUERY, (user_id,))
+                    result = cursor.fetchall()
+                    return result if result else None
+        except Exception as e:
+            print(f"Database query failed: {e}")
+            return None
+
+    def get_all_projects(self, user_id):
+        try:
+            with get_db_connection() as connection:
+                with connection.cursor(dictionary=True) as cursor:
+                    cursor.execute(self.GET_ALL_PROJECTS_QUERY, (user_id,))
                     result = cursor.fetchall()
                     return result if result else None
         except Exception as e:

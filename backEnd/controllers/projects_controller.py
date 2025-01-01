@@ -63,8 +63,23 @@ def update_project():
 @projects_dp.route('/getAllProjects', methods=['GET', 'OPTIONS'])
 @cross_origin()
 def get_all_projects():
-    return jsonify(projects_service.get_all_projects()), 200
+    try:
+        # 獲取請求中的 username 參數
+        username = request.args.get('username')
+        if not username:
+            return jsonify({"error": "Username is required"}), 400
 
+        # 調用 service 層獲取項目數據
+        projects = projects_service.get_all_projects(username)
+
+        if not projects:
+            return jsonify({"error": "Projects not found or access denied"}), 404
+
+        # 返回項目數據
+        return jsonify(projects), 200
+    except Exception as e:
+        # 捕獲潛在的異常並返回通用錯誤信息
+        return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
 
 @projects_dp.route('/getFourProjects', methods=['GET', 'OPTIONS'])
 @cross_origin()

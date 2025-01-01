@@ -187,3 +187,46 @@ class projects_service:
         return None
 
 
+    def get_all_projects(self, username):
+        user_id = self.dao.get_user_id_by_username(username)
+        if not user_id:
+            return None
+
+        # 獲取多條項目數據
+        projects_data = self.dao.get_all_projects(user_id)
+
+        if projects_data:
+            processed_projects = []
+            for result in projects_data:
+                # 初始化 MIME 類型
+                mime_type = "image/jpeg"
+                project_photo = result.get("project_photo")
+
+                if project_photo:
+
+                    try:
+                        decoded_photo = base64.b64decode(project_photo)  # 将 Base64 字符串解码成二进制数据
+                        # 确保 Base64 的字符串格式正确
+                        base64_photo = base64.b64encode(decoded_photo).decode("utf-8")  # 再次编码为 Base64 字符串
+                        result["project_photo"] = f"data:{mime_type};base64,{base64_photo}"
+                    except Exception as e:
+                        print(f"Error processing project photo for project ID {result.get('project_id')}: {e}")
+                        result["project_photo"] = None
+
+                # 添加格式化的項目數據到結果列表
+                processed_projects.append({
+                    "project_id": result.get("project_id"),
+                    "user_id": result.get("user_id"),
+                    "title": result.get("title", ""),
+                    "description": result.get("description", ""),
+                    "project_photo": result.get("project_photo"),
+                    "project_photo_mime_type": mime_type
+                })
+
+            # 返回處理後的多條項目數據
+            return processed_projects
+
+        return None
+
+
+
