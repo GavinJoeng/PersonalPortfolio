@@ -15,9 +15,25 @@
     .active {
         color: #4299e1;
     }
-    .navbar-list {
-        @apply flex justify-center space-x-6 p-4;
+
+    /* 确保菜单宽度动态调整 */
+    .dropdown-menu {
+        min-width: max-content; /* 内容自动适应 */
     }
+
+    .navbar {
+        @apply fixed top-0 left-0 right-0 bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-md z-10;
+    }
+
+    .navbar-list {
+        @apply flex justify-center space-x-6 p-4 items-center;
+        height: 64px; /* 確保高度固定 */
+    }
+
+    .nav-user {
+        @apply relative; /* 父元素需要 relative 以支持下拉框的 absolute 定位 */
+    }
+
     .navbar-login {
         @apply bg-transparent text-white border border-white px-4 py-2 rounded hover:bg-white hover:text-gray-800 transition-colors;
     }
@@ -68,9 +84,7 @@
     @apply bg-gradient text-white min-h-screen flex items-center justify-center;
 }
 
-.navbar {
-    @apply fixed top-0 left-0 right-0 bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-md z-10;
-}
+
 
 
 /*font*/
@@ -294,4 +308,22 @@
 
 .text-link {
     @apply text-blue-400 hover:text-blue-300;
+}
+
+
+/*project-detail*/
+
+#edit-modal .bg-gray-800 {
+    overflow-y: auto; /* 启用垂直滚动 */
+    max-height: 90vh; /* 最大高度为视窗高度的 90% */
+}
+
+
+.upload-button {
+    @apply bg-blue-500 text-white px-6 py-3 rounded-full hover:bg-blue-600 transition-colors mt-3;
+}
+
+
+.upload-photo {
+    @apply w-32 h-32 rounded-full object-cover mr-6 border-4 border-blue-500;
 }

@@ -1,4 +1,52 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const editButton = document.getElementById('edit-button');
+    const modalOverlay = document.getElementById('modal-overlay');
+    const saveButton = document.getElementById('save-button');
+    const cancelButton = document.getElementById('cancel-button');
+
+    const usernameDisplay = document.getElementById('username-display');
+    const phoneDisplay = document.getElementById('phone-display');
+    const emailDisplay = document.getElementById('email-display');
+    const welcomeTextDisplay = document.getElementById('welcome-text-display');
+    const introTextDisplay = document.getElementById('intro-text-display');
+
+    const usernameInput = document.getElementById('username-input');
+    const phoneInput = document.getElementById('phone-input');
+    const emailInput = document.getElementById('email-input');
+    const welcomeTextInput = document.getElementById('welcome-text-input');
+    const introTextInput = document.getElementById('intro-text-input');
+
+    // 打开模态窗口
+    editButton.addEventListener('click', () => {
+        usernameInput.value = usernameDisplay.textContent;
+        phoneInput.value = phoneDisplay.textContent;
+        emailInput.value = emailDisplay.textContent;
+        welcomeTextInput.value = welcomeTextDisplay.textContent;
+        introTextInput.value = introTextDisplay.textContent;
+
+        modalOverlay.classList.remove('hidden');
+    });
+
+    // 关闭模态窗口
+    cancelButton.addEventListener('click', () => {
+        modalOverlay.classList.add('hidden');
+    });
+
+    // 保存并更新展示信息
+    saveButton.addEventListener('click', (e) => {
+        e.preventDefault(); // 阻止默认提交行为
+
+        usernameDisplay.textContent = usernameInput.value.trim();
+        phoneDisplay.textContent = phoneInput.value.trim();
+        emailDisplay.textContent = emailInput.value.trim();
+        welcomeTextDisplay.textContent = welcomeTextInput.value.trim();
+        introTextDisplay.textContent = introTextInput.value.trim();
+
+        modalOverlay.classList.add('hidden');
+        alert('個人展示信息已更新！');
+    });
+
+
     const navLinks = document.querySelectorAll('.nav-link');
     const userInfo = document.getElementById('userInfo');
 
@@ -17,7 +65,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // 監聽 hash 變化
         window.addEventListener('hashchange', () => setActiveLink(navLinks));
     }
+
 });
+
 
 function updateUserInfo(userInfo) {
     const username = localStorage.getItem('username');
@@ -106,45 +156,3 @@ function setActiveLink(navLinks) {
     });
 }
 
-
-
-
-// 動態加載指定部分
-// fetch('projects.html')
-//     .then(response => response.text()) // 獲取整個 HTML 文件
-//     .then(html => {
-//         const parser = new DOMParser(); // 解析 HTML
-//         const doc = parser.parseFromString(html, 'text/html');
-//         const projectsSection = doc.querySelector('#projects'); // 提取指定部分
-//
-//         if (projectsSection) {
-//             // 移除不需要的部分
-//             const unwantedDiv = projectsSection.querySelector('#viewProjects');
-//             if (unwantedDiv) unwantedDiv.remove();
-//             document.getElementById('projects-container').innerHTML = projectsSection.outerHTML;
-//         } else {
-//             console.error('Projects section not found in projects.html');
-//         }
-//     })
-//     .catch(error => console.error('Error loading projects.html:', error));
-
-
-// 動態加載指定部分
-// fetch('resume.html')
-//     .then(response => response.text()) // 獲取整個 HTML 文件
-//     .then(html => {
-//         const parser = new DOMParser(); // 解析 HTML
-//         const doc = parser.parseFromString(html, 'text/html');
-//         const resumeSection = doc.querySelector('#resume'); // 提取指定部分
-//
-//         if (resumeSection) {
-//             // 移除不需要的部分
-//             const unwantedDiv = resumeSection.querySelector('#backHome');
-//             if (unwantedDiv) unwantedDiv.remove();
-//             document.getElementById('resume-container').innerHTML = resumeSection.outerHTML;
-//         } else {
-//             console.error('resume section not found in resume.html');
-//         }
-//     })
-//     .catch(error => console.error('Error loading resume.html:', error));
-//

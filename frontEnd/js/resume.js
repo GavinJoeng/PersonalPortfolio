@@ -1,4 +1,5 @@
 let tempPictureId = null; // 儲存臨時圖片 ID
+const API_BASE_URL = "http://127.0.0.1:5000/api";
 
 document.addEventListener('DOMContentLoaded', (event) => {
 
@@ -29,7 +30,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     }
 
     // 後端 JSON 接口
-    let apiUrl = "http://127.0.0.1:5000/api/getResumeInfo?user_id=1";
+    let apiUrl = `${API_BASE_URL}/getResumeInfo?user_id=1`;
     // 從後端獲取數據
     fetch(apiUrl, {
         method: "GET",
@@ -43,6 +44,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
             // 個人資料部分
             const profile = data;
+
+            //renderResumeData(data, editExpContainer, editEduContainer, editSkillsContainer);
+
             // 加載個人資料部分
             document.getElementById('edit-name').value = profile.name || '';
             document.getElementById('edit-title').value = profile.title || '';
@@ -60,6 +64,127 @@ document.addEventListener('DOMContentLoaded', (event) => {
             renderEduction(educationData, editEduContainer);
             renderSkills(skillsData, editSkillsContainer);
         });
+
+
+
+    // Profile picture upload functionality
+    const profilePictureInput = document.querySelector('#edit-profile-picture');
+    const profileUploadButton = document.querySelector('#upload-button');
+    const previewImage = document.querySelector('#preview-image');
+
+    // 監聽文件輸入框的變化事件
+    profilePictureInput.addEventListener('change', (event) => {
+        const file = event.target.files[0]; // 獲取選中的文件
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                // 將圖片的 Base64 URL 設置為預覽圖片的 src
+                previewImage.src = e.target.result;
+                previewImage.style.display = 'block'; // 顯示圖片
+            };
+            reader.onerror = function () {
+                alert('Error reading file!'); // 處理讀取錯誤
+            };
+            reader.readAsDataURL(file); // 將文件讀取為 Base64 格式
+        } else {
+            // 如果用戶取消選擇文件，清空預覽圖片
+            previewImage.src = '';
+            previewImage.style.display = 'none'; // 隱藏圖片
+        }
+    });
+
+
+
+    profileUploadButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        const file = profilePictureInput.files[0];
+        uploadFile(
+            file,
+            `${API_BASE_URL}/uploadTemp`, // 上傳臨時文件的接口
+            'profile-picture', // 文件字段名稱
+            function onSuccess(data) {
+                tempPictureId = data.temp_id || null;
+                alert('Upload successful: ' + (tempPictureId ? `Temp ID: ${tempPictureId}` : 'No new file uploaded.'));
+            },
+            function onError(error) {
+                alert('Upload failed: ' + error);
+            }
+        );
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('edit-profile-picture').src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+
+
+    })
+
+
+    // 提交 resume
+    document.querySelector('#edit-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        console.log('Resume updated');
+
+        workExperienceData = collectWorkExperienceData(editExpContainer);
+        educationData = collectEducationData(editEduContainer);
+        skillsData = collectSkillsData(editSkillsContainer);
+
+
+        // 确保 editModal 存在时再操作
+        if (editModal) {
+            const resumeData = collectFormData(workExperienceData, educationData, skillsData); // 收集數據
+            submitFormData(resumeData)
+                .then(data => {
+
+
+                    // 後端返回的數據在 `data.data` 中
+                    const profile = data.data;
+                    //resume主頁渲染
+                    renderResumeInfo(profile);
+                    // 更新個人資料表單
+                    document.getElementById('edit-name').value = profile.name || '';
+                    document.getElementById('edit-title').value = profile.title || '';
+                    document.getElementById('edit-email').value = profile.email || '';
+                    document.getElementById('edit-phone').value = profile.phone || '';
+                    document.getElementById('edit-location').value = profile.location || '';
+                    document.getElementById('edit-summary').value = profile.summary || '';
+
+                    // 更新數據
+                    workExperienceData = profile.experience || [];
+                    educationData = profile.education || [];
+                    skillsData = profile.skills || [];
+
+                    // 渲染界面
+                    renderWorkExperience(workExperienceData, editExpContainer);
+                    renderEduction(educationData, editEduContainer);
+                    renderSkills(skillsData, editSkillsContainer);
+                })
+                .catch(error => {
+                    // 處理錯誤
+                    console.error('Error updating data:', error);
+                    alert('更新數據失敗，請稍後再試。');
+                });
+
+            closeModal(editModal);
+        } else {
+            console.error('editModal is not defined or null.');
+        }
+    });
+
+
+
+
+    // 點擊模態框背景關閉模態框
+    editModal.addEventListener('click', (event) => {
+        // 確保只有點擊在背景區域（而不是內容區域）時才關閉模態框
+        if (event.target === editModal) {
+            closeModal(editModal);
+        }
+    });
+
 
 
     // 綁定添加工作經歷按鈕
@@ -114,85 +239,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
     // });
 
 
-
-    // Profile picture upload functionality
-    const profilePictureInput = document.querySelector('#edit-profile-picture');
-    const profileUploadButton = document.querySelector('#upload-button');
-    const previewImage = document.querySelector('#preview-image');
-
-    // 監聽文件輸入框的變化事件
-    profilePictureInput.addEventListener('change', (event) => {
-        const file = event.target.files[0]; // 獲取選中的文件
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                // 將圖片的 Base64 URL 設置為預覽圖片的 src
-                previewImage.src = e.target.result;
-                previewImage.style.display = 'block'; // 顯示圖片
-            };
-            reader.onerror = function () {
-                alert('Error reading file!'); // 處理讀取錯誤
-            };
-            reader.readAsDataURL(file); // 將文件讀取為 Base64 格式
-        } else {
-            // 如果用戶取消選擇文件，清空預覽圖片
-            previewImage.src = '';
-            previewImage.style.display = 'none'; // 隱藏圖片
-        }
-    });
-
-
-
-    profileUploadButton.addEventListener('click', (e) => {
-        e.preventDefault();
-        const file = profilePictureInput.files[0];
-        uploadFile(
-            file,
-            'http://127.0.0.1:5000/api/uploadTemp', // 上傳臨時文件的接口
-            'profile-picture', // 文件字段名稱
-            function onSuccess(data) {
-                tempPictureId = data.temp_id || null;
-                alert('Upload successful: ' + (tempPictureId ? `Temp ID: ${tempPictureId}` : 'No new file uploaded.'));
-            },
-            function onError(error) {
-                alert('Upload failed: ' + error);
-            }
-        );
-
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                document.getElementById('edit-profile-picture').src = e.target.result;
-            }
-            reader.readAsDataURL(file);
-        }
-
-
-    })
-
-
-    // 提交 resume
-    document.querySelector('#edit-form').addEventListener('submit', function (e) {
-        e.preventDefault();
-        console.log('Resume updated');
-
-        workExperienceData = collectWorkExperienceData(editExpContainer);
-        educationData = collectEducationData(editEduContainer);
-        skillsData = collectSkillsData(editSkillsContainer);
-
-
-        // 确保 editModal 存在时再操作
-        if (editModal) {
-            const resumeData = collectFormData(workExperienceData, educationData, skillsData); // 收集數據
-            submitFormData(resumeData); // 提交數據
-            closeModal(editModal);
-        } else {
-            console.error('editModal is not defined or null.');
-        }
-    });
-
-
 });
+
+
 
 /**
  * 通用文件上傳方法
@@ -540,7 +589,7 @@ function collectSkillsData(editSkillsContainer) {
  * @param {Object} data - 收集到的表單數據
  */
 function submitFormData(data) {
-    fetch("http://127.0.0.1:5000/api/saveResumeInfo", {
+    return fetch(`${API_BASE_URL}/saveResumeInfo`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -558,11 +607,14 @@ function submitFormData(data) {
             console.log('Resume saved successfully:', data);
             alert('Resume saved successfully!');
             closeModal(); // 提交成功後關閉模態窗口
+            return data; // 成功時返回數據
         })
         .catch(error => {
             console.error('Error saving resume:', error);
+            throw error; // 失敗時讓錯誤傳遞出去
         });
 }
+
 
 /**
  * 關閉模態窗口
@@ -571,6 +623,7 @@ function closeModal(editModal) {
     if (editModal) {
         editModal.classList.remove('active'); // 根據模態窗口的激活樣式修改此處
         editModal.classList.add('hidden');   // 隱藏模態窗口
+        document.body.classList.remove('overflow-hidden'); // 允許背景滾動
     }
 }
 
@@ -580,16 +633,25 @@ document.addEventListener("DOMContentLoaded", getResumeInfo);
 
 function getResumeInfo() {
 
-    const currentPage = window.location.pathname.split('/').pop();
     const navLinks = document.querySelectorAll('.nav-link');
+    const userInfo = document.getElementById('userInfo');
 
-    navLinks.forEach(link => {
-        if (link.getAttribute('href') === currentPage || (currentPage === '' && link.getAttribute('href') === '#home')) {
-            link.classList.add('active');
-        } else {
-            link.classList.remove('active');
-        }
-    });
+    if (userInfo) {
+        console.log('DOM fully loaded, updating userInfo');
+        updateUserInfo(userInfo);
+        //document.querySelector('.navbar-signup').classList.add('hidden');
+    } else {
+        console.warn('Element with id="userInfo" not found in DOM');
+    }
+
+    if (navLinks && navLinks.length > 0) {
+        // 初始调用
+        setActiveLink(navLinks);
+
+        // 監聽 hash 變化
+        window.addEventListener('hashchange', () => setActiveLink(navLinks));
+    }
+
     // 後端 JSON 接口
     let apiUrl = "http://127.0.0.1:5000/api/getResumeInfo?user_id=1";
 
@@ -607,120 +669,15 @@ function getResumeInfo() {
             return response.json();
         })
         .then(data => {
-            console.log("Fetched Data:", data); // 檢查數據結構
-
-            // 個人資料部分
-            const profile = data;
-
-            // 渲染 Resume Header
-            const resumeHeader = document.getElementById("resume-header");
-            resumeHeader.innerHTML = ""; // 清空舊內容
-            const headerHTML = `
-                <div class="resume-header">
-                    <div class="resume-photo-name">
-                        <img id="profile-picture" 
-                             src="${profile.profile_photo || '/placeholder.svg'}" 
-                             alt="${profile.name || 'N/A'}" 
-                             class="resume-photo">
-                        <div>
-                            <h3 class="resume-name-font">${profile.name || 'N/A'}</h3>
-                            <p class="resume-title">${profile.title || 'N/A'}</p>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <a href="mailto:${profile.email || '#'}" class="resume-email">Email: ${profile.email || 'N/A'}</a>
-                        <p class="mb-1">Phone Number: ${profile.phone || 'N/A'}</p>
-                        <p>Location: ${profile.location || 'N/A'}</p>
-                    </div>
-                </div>`;
-            resumeHeader.insertAdjacentHTML("beforeend", headerHTML);
-
-
-            // 渲染 Summary
-            document.getElementById("summary").textContent = profile.summary || "No summary available.";
-            const summarySection = document.getElementById("summary-section");
-            if (summarySection) {
-                summarySection.innerHTML = ""; // 清空舊內容
-                const summaryHTML = `
-                <div class="mb-10">
-                    <h3 class="resume-section-header">Summary</h3>
-                    <p class="resume-description-text">${data.summary || "No summary available."}</p>
-                </div>`;
-                summarySection.insertAdjacentHTML("beforeend", summaryHTML);
-            }
-
-
-            // 更新 Work Experience
-            const workExperienceContainer = document.getElementById("work-experience");
-            workExperienceContainer.innerHTML = ""; // 清空舊內容
-
-            if (profile.experience && profile.experience.length > 0) {
-                const workExperienceHTML = `
-                <div class="mb-10">
-                    <h3 class="resume-section-header">Work Experience</h3>
-                   ${profile.experience.map(exp => {
-                    // 確保 responsibilities 是數組
-                    const responsibilities = Array.isArray(exp.responsibilities)
-                        ? exp.responsibilities
-                        : (typeof exp.responsibilities === 'string' ? exp.responsibilities.split('\n') : []);
-                    return `
-                        <div class="mb-6">
-                            <h4 class="resume-section-subhead">${exp.role || "N/A"}</h4>
-                            <p class="resume-experience-time">${exp.company || "N/A"} | ${exp.period || "N/A"}</p>
-                            <ul class="resume-list-text">
-                                ${responsibilities.map(item => `<li>${item}</li>`).join("")}
-                            </ul>
-                        </div>`;
-                }).join("")}
-                </div>`;
-                workExperienceContainer.insertAdjacentHTML("beforeend", workExperienceHTML);
-            }
-
-
-            // 更新 Education
-            const educationSection = document.getElementById("education-section");
-            educationSection.innerHTML = ""; // 清空舊內容
-
-            if (profile.education && profile.education.length > 0) {
-                const educationHTML = `
-                <div class="mb-10">
-                    <h3 class="resume-section-header">Education</h3>
-                    ${profile.education.map(edu => {
-                                const coursework = Array.isArray(edu.relevantCoursework)
-                                    ? edu.relevantCoursework.join(", ")
-                                    : "N/A";
-                                return `
-                            <div>
-                                <h4 class="resume-section-subhead">${edu.degree || "N/A"}</h4>
-                                <p class="resume-experience-time">${edu.institution || "N/A"} | ${edu.period || "N/A"}</p>
-                                <p class="resume-description-text">Relevant coursework: ${coursework}</p>
-                            </div>`;
-                            }).join("")}
-                </div>`;
-                educationSection.insertAdjacentHTML("beforeend", educationHTML);
-            }
-
-
-            // 更新 Skills
-            const skillsSection = document.getElementById("skills-section");
-            skillsSection.innerHTML = ""; // 清空舊內容
-
-            if (profile.skills && profile.skills.length > 0) {
-                const validSkills = profile.skills.filter(skill => skill); // 過濾空值
-                const skillsHTML = `
-                    <h3 class="resume-section-header">Skills</h3>
-                    <ul class="resume-skills-unordered-list">
-                        ${validSkills.slice(0, 8).map(skill => `<li class="resume-skills-list">${skill}</li>`).join("")}
-                    </ul>`;
-                                skillsSection.insertAdjacentHTML("beforeend", skillsHTML);
-            }
-
+            renderResumeInfo(data); // 調用渲染數據方法
         })
         .catch(error => {
             console.error("Error fetching resume data:", error);
-            document.getElementById("summary").textContent = "Failed to load resume data.";
+            const summarySection = document.getElementById("summary-section");
+            if (summarySection) {
+                summarySection.innerHTML = `<p class="resume-error-text">Failed to load resume data.</p>`;
+            }
         });
-
 
     // Edit button functionality
     const editButton = document.querySelector('#edit-resume-btn');
@@ -746,3 +703,190 @@ function getResumeInfo() {
 }
 
 
+
+
+function updateUserInfo(userInfo) {
+    const username = localStorage.getItem('username');
+    const navbarSignup = document.querySelector('.navbar-signup');
+
+    if (username) {
+        userInfo.innerHTML = `
+           <div class="relative inline-block">
+                <span class="nav-link dropdown-trigger">${username}</span>
+                <div class="dropdown-menu hidden absolute bg-gray-800 border border-gray-300 rounded shadow-lg mt-2 z-50 transition-all duration-300 transform opacity-0 scale-95 min-w-max">
+                    <a href="personal-center.html" class="block px-4 py-2 nav-link">Personal Center</a>
+                    <a href="#" class="block px-4 py-2 nav-link logout">Logout</a>
+                </div>
+            </div>
+        `;
+
+        const dropdownTrigger = userInfo.querySelector('.dropdown-trigger');
+        const dropdownMenu = userInfo.querySelector('.dropdown-menu');
+
+        const setDropdownWidth = () => {
+            dropdownMenu.style.minWidth = `${dropdownTrigger.offsetWidth}px`;
+        };
+        setDropdownWidth();
+        window.addEventListener('resize', setDropdownWidth);
+
+        const toggleDropdown = (show) => {
+            clearTimeout(dropdownMenu.hideTimeout);
+            if (show) {
+                dropdownMenu.classList.remove('hidden', 'opacity-0', 'scale-95');
+            } else {
+                dropdownMenu.hideTimeout = setTimeout(() => {
+                    dropdownMenu.classList.add('opacity-0', 'scale-95');
+                    setTimeout(() => dropdownMenu.classList.add('hidden'), 300);
+                }, 300);
+            }
+        };
+
+        dropdownTrigger.addEventListener('mouseenter', () => toggleDropdown(true));
+        dropdownMenu.addEventListener('mouseenter', () => toggleDropdown(true));
+        dropdownTrigger.addEventListener('mouseleave', () => toggleDropdown(false));
+        dropdownMenu.addEventListener('mouseleave', () => toggleDropdown(false));
+
+        const logoutButton = userInfo.querySelector('.logout');
+        if (logoutButton) {
+            logoutButton.addEventListener('click', () => {
+                localStorage.removeItem('username');
+                alert('Logged out successfully');
+                window.location.href = 'index.html';
+            });
+        }
+
+        // 傳統寫法檢查 navbarSignup 是否存在
+        if (navbarSignup) {
+            navbarSignup.classList.add('hidden');
+        }
+    } else {
+        userInfo.innerHTML = `<a href="login.html" class="navbar-login text-blue-500 hover:underline">Login</a>`;
+
+        // 傳統寫法檢查 navbarSignup 是否存在
+        if (navbarSignup) {
+            navbarSignup.classList.add('active');
+        }
+    }
+}
+
+
+function setActiveLink(navLinks) {
+    const currentPath = window.location.pathname.split('/').pop() || 'index.html'; // 當前頁面
+    const currentHash = window.location.hash; // 當前 hash，例如 #contact
+
+    navLinks.forEach(link => {
+        const href = link.getAttribute('href'); // 獲取鏈接 href
+
+        // 檢查完整 href 是否匹配當前頁面 + hash
+        if (href === `${currentPath}${currentHash}` || href === currentHash) {
+            link.classList.add('active');
+        }
+        // 如果當前頁面沒有 hash，僅匹配純頁面
+        else if (!currentHash && href === currentPath) {
+            link.classList.add('active');
+        }
+        // 移除其他鏈接的激活狀態
+        else {
+            link.classList.remove('active');
+        }
+    });
+}
+
+
+
+// 渲染數據的方法
+function renderResumeInfo(profile) {
+    // 渲染 Resume Header
+    const resumeHeader = document.getElementById("resume-header");
+    resumeHeader.innerHTML = ""; // 清空舊內容
+    const headerHTML = `
+        <div class="resume-header">
+            <div class="resume-photo-name">
+                <img id="profile-picture" 
+                     src="${profile.profile_photo || '/placeholder.svg'}" 
+                     alt="${profile.name || 'N/A'}" 
+                     class="resume-photo">
+                <div>
+                    <h3 class="resume-name-font">${profile.name || 'N/A'}</h3>
+                    <p class="resume-title">${profile.title || 'N/A'}</p>
+                </div>
+            </div>
+            <div class="text-right">
+                <a href="mailto:${profile.email || '#'}" class="resume-email">Email: ${profile.email || 'N/A'}</a>
+                <p class="mb-1">Phone Number: ${profile.phone || 'N/A'}</p>
+                <p>Location: ${profile.location || 'N/A'}</p>
+            </div>
+        </div>`;
+    resumeHeader.insertAdjacentHTML("beforeend", headerHTML);
+
+    // 渲染 Summary
+    const summarySection = document.getElementById("summary-section");
+    if (summarySection) {
+        summarySection.innerHTML = ""; // 清空舊內容
+        const summaryHTML = `
+        <div class="mb-10">
+            <h3 class="resume-section-header">Summary</h3>
+            <p class="resume-description-text">${profile.summary || "No summary available."}</p>
+        </div>`;
+        summarySection.insertAdjacentHTML("beforeend", summaryHTML);
+    }
+
+    // 渲染 Work Experience
+    const workExperienceContainer = document.getElementById("work-experience");
+    workExperienceContainer.innerHTML = ""; // 清空舊內容
+    if (profile.experience && profile.experience.length > 0) {
+        const workExperienceHTML = `
+        <div class="mb-10">
+            <h3 class="resume-section-header">Work Experience</h3>
+           ${profile.experience.map(exp => {
+            const responsibilities = Array.isArray(exp.responsibilities)
+                ? exp.responsibilities
+                : (typeof exp.responsibilities === 'string' ? exp.responsibilities.split('\n') : []);
+            return `
+                    <div class="mb-6">
+                        <h4 class="resume-section-subhead">${exp.role || "N/A"}</h4>
+                        <p class="resume-experience-time">${exp.company || "N/A"} | ${exp.period || "N/A"}</p>
+                        <ul class="resume-list-text">
+                            ${responsibilities.map(item => `<li>${item}</li>`).join("")}
+                        </ul>
+                    </div>`;
+        }).join("")}
+        </div>`;
+        workExperienceContainer.insertAdjacentHTML("beforeend", workExperienceHTML);
+    }
+
+    // 渲染 Education
+    const educationSection = document.getElementById("education-section");
+    educationSection.innerHTML = ""; // 清空舊內容
+    if (profile.education && profile.education.length > 0) {
+        const educationHTML = `
+        <div class="mb-10">
+            <h3 class="resume-section-header">Education</h3>
+            ${profile.education.map(edu => {
+            const coursework = Array.isArray(edu.relevantCoursework)
+                ? edu.relevantCoursework.join(", ")
+                : "N/A";
+            return `
+                <div>
+                    <h4 class="resume-section-subhead">${edu.degree || "N/A"}</h4>
+                    <p class="resume-experience-time">${edu.institution || "N/A"} | ${edu.period || "N/A"}</p>
+                    <p class="resume-description-text">Relevant coursework: ${coursework}</p>
+                </div>`;
+        }).join("")}
+        </div>`;
+        educationSection.insertAdjacentHTML("beforeend", educationHTML);
+    }
+
+    // 渲染 Skills
+    const skillsSection = document.getElementById("skills-section");
+    skillsSection.innerHTML = ""; // 清空舊內容
+    if (profile.skills && profile.skills.length > 0) {
+        const validSkills = profile.skills.filter(skill => skill); // 過濾空值
+        const skillsHTML = `
+            <h3 class="resume-section-header">Skills</h3>
+            <ul class="resume-skills-unordered-list">
+                ${validSkills.slice(0, 8).map(skill => `<li class="resume-skills-list">${skill}</li>`).join("")}
+            </ul>`;
+        skillsSection.insertAdjacentHTML("beforeend", skillsHTML);
+    }
+}

@@ -4,8 +4,10 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     const password = document.getElementById('password').value;
     const errorMessage = document.getElementById('errorMessage');
 
+    // 後端 JSON 接口
+    let apiUrl = "http://127.0.0.1:5000/api/login";
     try {
-        const response = await fetch('http://localhost:5000/login', {
+        const response = await fetch(apiUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -15,8 +17,11 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
 
         if (response.ok) {
             const data = await response.json();
-            localStorage.setItem('token', data.access_token);
-            window.location.href = 'projects.html';
+            localStorage.setItem('accessToken', data.access_token);
+            localStorage.setItem("username", data.username);
+            // 跳轉或顯示成功信息
+            alert("Login successful!");
+            window.location.href = 'index.html';
         } else {
             const data = await response.json();
             errorMessage.textContent = data.msg || 'Invalid username or password';
