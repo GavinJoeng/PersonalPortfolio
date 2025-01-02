@@ -1,3 +1,4 @@
+const API_BASE_URL = 'http://127.0.0.1:5000/api';
 document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelectorAll('.nav-link');
     const userInfo = document.getElementById('userInfo');
@@ -17,7 +18,103 @@ document.addEventListener('DOMContentLoaded', () => {
         // 監聽 hash 變化
         window.addEventListener('hashchange', () => setActiveLink(navLinks));
     }
+
+    fetchIndexInfo();
+
+    const sendMsgBtn = document.querySelector('#send-msg-btn');
+
+    sendMsgBtn.addEventListener('click', async(e) => {
+        e.preventDefault();
+        const msg = {
+            name: document.querySelector("#name").value,
+            email: document.querySelector("#email").value,
+            message: document.querySelector("#message").value,
+        }
+
+        if (!msg.name || !msg.email || !msg.message) {
+            alert('Please fill in all required fields.');
+            return;
+        }
+
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/sendMsg`, {
+                method: 'POST',
+                mode: "cors", // 啟用跨域
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(msg),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(`Failed to update personal information: ${errorData.error || response.statusText}`);
+            }
+
+            const result = await response.json();
+
+            if (result.error) {
+                alert(`Error: ${result.error}`);
+                return;
+            }
+
+            // 清除列表消息
+            document.querySelector("#name").value = '';
+            document.querySelector("#email").value = '';
+            document.querySelector("#message").value = '';
+
+            alert('已留言,請等待用戶回應！');
+        } catch (error) {
+            console.error('Failed to update personal information:', error);
+            alert('更新個人展示信息失敗，請稍後再試。');
+        }
+
+    })
+
+
+
 });
+
+async function fetchIndexInfo(){
+
+    try {
+        // 从 localStorage 获取用户名
+        const username = localStorage.getItem('username');
+        if (!username) {
+            throw new Error('Username is not defined. Please log in.');
+        }
+
+        const response = await fetch(`${API_BASE_URL}/getIndexInfo?username=${encodeURIComponent(username)}`, {
+            method: 'GET',
+            mode: 'cors', // 啟用跨域
+            headers: {'Content-Type': 'application/json'},
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error fetching personal information: ${response.status}`);
+        }
+
+        // 解析 JSON 数据
+        const indexInfo = await response.json();
+
+        if (indexInfo.error) {
+            alert(`Error: ${indexInfo.error}`);
+            return;
+        }
+
+        // 更新 DOM 内容
+        const welcomeText = document.querySelector('#welcome-text');
+        const introText = document.querySelector('#intro-text');
+
+        welcomeText.textContent = indexInfo.welcome_text; // 更新文本内容
+        introText.textContent = indexInfo.introduction; // 更新文本内容
+
+    }catch (error) {
+            console.error('Failed to fetch personal information:', error);
+            alert('Failed to load personal information. Please try again later.');
+    }
+
+}
+
 
 function updateUserInfo(userInfo) {
     const username = localStorage.getItem('username');
@@ -109,42 +206,5 @@ function setActiveLink(navLinks) {
 
 
 
-// 動態加載指定部分
-// fetch('projects.html')
-//     .then(response => response.text()) // 獲取整個 HTML 文件
-//     .then(html => {
-//         const parser = new DOMParser(); // 解析 HTML
-//         const doc = parser.parseFromString(html, 'text/html');
-//         const projectsSection = doc.querySelector('#projects'); // 提取指定部分
-//
-//         if (projectsSection) {
-//             // 移除不需要的部分
-//             const unwantedDiv = projectsSection.querySelector('#viewProjects');
-//             if (unwantedDiv) unwantedDiv.remove();
-//             document.getElementById('projects-container').innerHTML = projectsSection.outerHTML;
-//         } else {
-//             console.error('Projects section not found in projects.html');
-//         }
-//     })
-//     .catch(error => console.error('Error loading projects.html:', error));
 
 
-// 動態加載指定部分
-// fetch('resume.html')
-//     .then(response => response.text()) // 獲取整個 HTML 文件
-//     .then(html => {
-//         const parser = new DOMParser(); // 解析 HTML
-//         const doc = parser.parseFromString(html, 'text/html');
-//         const resumeSection = doc.querySelector('#resume'); // 提取指定部分
-//
-//         if (resumeSection) {
-//             // 移除不需要的部分
-//             const unwantedDiv = resumeSection.querySelector('#backHome');
-//             if (unwantedDiv) unwantedDiv.remove();
-//             document.getElementById('resume-container').innerHTML = resumeSection.outerHTML;
-//         } else {
-//             console.error('resume section not found in resume.html');
-//         }
-//     })
-//     .catch(error => console.error('Error loading resume.html:', error));
-//

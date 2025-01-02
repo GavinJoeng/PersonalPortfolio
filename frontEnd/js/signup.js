@@ -8,6 +8,7 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
     try {
         const response = await fetch('http://localhost:5000/register', {
             method: 'POST',
+            mode: 'cors', // 啟用跨域
             headers: {
                 'Content-Type': 'application/json',
             },

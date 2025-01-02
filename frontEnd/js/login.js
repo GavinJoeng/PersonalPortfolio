@@ -9,6 +9,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     try {
         const response = await fetch(apiUrl, {
             method: 'POST',
+            mode: 'cors', // 啟用跨域
             headers: {
                 'Content-Type': 'application/json',
             },

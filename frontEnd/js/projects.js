@@ -26,13 +26,66 @@ document.addEventListener('DOMContentLoaded', (event) => {
     viewAllButton.addEventListener("click", (event) => {
         event.preventDefault();
 
-        // 模擬跳轉到所有項目頁面或其他動作
-        alert("View All Projects clicked!");
+        fetchAllProjects();
+        viewAllButton.style.display = "none";
+    });
+
+    const backToTopButton = document.getElementById("scroll-top");
+
+    // 滾動顯示/隱藏按鈕
+    window.addEventListener("scroll", () => {
+        if (window.scrollY > 350) {
+            backToTopButton.style.display = "block";
+        } else {
+            backToTopButton.style.display = "none";
+        }
+    });
+
+    // 點擊返回頂部
+    backToTopButton.addEventListener("click", () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
     });
 
 
 });
 
+
+async function fetchAllProjects() {
+
+    const username = localStorage.getItem('username'); // 從 localStorage 獲取用戶名
+
+    if (!username) {
+        alert('Username not found in localStorage. Please log in.');
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://127.0.0.1:5000/api/getAllProjects?username=${encodeURIComponent(username)}`, {
+            method: 'GET',
+            mode: 'cors', // 啟用跨域
+            headers: { 'Content-Type': 'application/json' },
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error fetching projects: ${response.status}`);
+        }
+
+        const projectsData = await response.json();
+
+        if (projectsData.error) {
+            alert(`Error: ${projectsData.error}`);
+            return;
+        }
+
+        // 渲染項目數據
+        renderProjects(projectsData);
+    } catch (error) {
+        console.error('Failed to fetch projects:', error);
+        alert('Failed to load projects. Please try again later.');
+    }
+
+
+}
 
 // 從後端獲取數據並渲染到頁面
 async function fetchAndRenderProjects() {

@@ -1,3 +1,5 @@
+const API_BASE_URL = 'http://127.0.0.1:5000/api';
+
 document.addEventListener('DOMContentLoaded', () => {
     const editButton = document.getElementById('edit-button');
     const modalOverlay = document.getElementById('modal-overlay');
@@ -33,18 +35,61 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 保存并更新展示信息
-    saveButton.addEventListener('click', (e) => {
+    saveButton.addEventListener('click', async(e) => {
         e.preventDefault(); // 阻止默认提交行为
+        const username = localStorage.getItem('username');
+        const updatedInfo = {
+            user_username: usernameInput.value.trim(),
+            user_phone: phoneInput.value.trim(),
+            user_email: emailInput.value.trim(),
+            user_welcome_text: welcomeTextInput.value.trim(),
+            user_introduction: introTextInput.value.trim(),
+            username: username,
+        };
 
-        usernameDisplay.textContent = usernameInput.value.trim();
-        phoneDisplay.textContent = phoneInput.value.trim();
-        emailDisplay.textContent = emailInput.value.trim();
-        welcomeTextDisplay.textContent = welcomeTextInput.value.trim();
-        introTextDisplay.textContent = introTextInput.value.trim();
+        if (!updatedInfo.user_username || !updatedInfo.user_phone || !updatedInfo.user_email) {
+            alert('Please fill in all required fields.');
+            return;
+        }
 
-        modalOverlay.classList.add('hidden');
-        alert('個人展示信息已更新！');
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/updatePersonalInfo`, {
+                method: 'POST',
+                mode: "cors", // 啟用跨域
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedInfo),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(`Failed to update personal information: ${errorData.error || response.statusText}`);
+            }
+
+            const result = await response.json();
+
+            if (result.error) {
+                alert(`Error: ${result.error}`);
+                return;
+            }
+
+            // 更新页面显示内容
+            usernameDisplay.textContent = updatedInfo.user_username;
+            phoneDisplay.textContent = updatedInfo.user_phone;
+            emailDisplay.textContent = updatedInfo.user_email;
+            welcomeTextDisplay.textContent = updatedInfo.user_welcome_text;
+            introTextDisplay.textContent = updatedInfo.user_introduction;
+
+            modalOverlay.classList.add('hidden');
+            alert('個人展示信息已成功更新！');
+        } catch (error) {
+            console.error('Failed to update personal information:', error);
+            alert('更新個人展示信息失敗，請稍後再試。');
+        }
+
     });
+
+    fetchPersonalInfo();
 
 
     const navLinks = document.querySelectorAll('.nav-link');
@@ -66,7 +111,102 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('hashchange', () => setActiveLink(navLinks));
     }
 
+
+
 });
+
+
+
+
+async function fetchPersonalInfo(){
+    const username = localStorage.getItem('username'); // 從 localStorage 獲取用戶名
+    if (!username) {
+        alert('Username not found in localStorage. Please log in.');
+        return;
+    }
+    try {
+        const response = await fetch(`${API_BASE_URL}/getPersonalInfo?username=${encodeURIComponent(username)}`, {
+            method: 'GET',
+            mode: 'cors', // 啟用跨域
+            headers: {'Content-Type': 'application/json'},
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error fetching personal information: ${response.status}`);
+        }
+
+        const personalInfo = await response.json();
+
+        if (personalInfo.error) {
+            alert(`Error: ${personalInfo.error}`);
+            return;
+        }
+
+        // 渲染項目數據
+        renderPersonalInfo(personalInfo);
+    } catch (error) {
+        console.error('Failed to fetch personal information:', error);
+        alert('Failed to load personal information. Please try again later.');
+    }
+
+}
+
+function renderPersonalInfo(personalInfo) {
+    // 渲染個人信息
+    const usernameDisplay = document.getElementById('username-display');
+    const phoneDisplay = document.getElementById('phone-display');
+    const emailDisplay = document.getElementById('email-display');
+    const welcomeTextDisplay = document.getElementById('welcome-text-display');
+    const introTextDisplay = document.getElementById('intro-text-display');
+
+    if (personalInfo.user_username) {
+        usernameDisplay.textContent = personalInfo.user_username;
+    }
+    if (personalInfo.user_phone) {
+        phoneDisplay.textContent = personalInfo.user_phone;
+    }
+    if (personalInfo.user_email) {
+        emailDisplay.textContent = personalInfo.user_email;
+    }
+    if (personalInfo.user_welcome_text) {
+        welcomeTextDisplay.textContent = personalInfo.user_welcome_text;
+    }
+    if (personalInfo.user_introduction) {
+        introTextDisplay.textContent = personalInfo.user_introduction;
+    }
+
+    // 渲染消息列表
+    const messagesContainer = document.getElementById('messages-container');
+    if (messagesContainer && Array.isArray(personalInfo.messages)) {
+        // 清空現有消息
+        messagesContainer.innerHTML = '';
+
+        // 動態添加消息
+        personalInfo.messages.forEach(message => {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('p-4', 'border', 'border-gray-300', 'rounded-md', 'shadow-sm');
+
+            const messageName = document.createElement('p');
+            messageName.classList.add('resume-description-text');
+            messageName.textContent = `Name: ${message.message_name}`;
+
+            const messageEmail = document.createElement('p');
+            messageEmail.classList.add('resume-description-text');
+            messageEmail.textContent = `Email: ${message.message_email}`;
+
+            const messageContent = document.createElement('p');
+            messageContent.classList.add('resume-description-text');
+            messageContent.textContent = `Message: ${message.message_content}`;
+
+            messageElement.appendChild(messageName);
+            messageElement.appendChild(messageEmail);
+            messageElement.appendChild(messageContent);
+
+            messagesContainer.appendChild(messageElement);
+        });
+    }
+}
+
 
 
 function updateUserInfo(userInfo) {
