@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 
+from controllers.personal_center_controller import personal_center_dp
 from controllers.projects_controller import projects_dp
 from controllers.resume_controller import resume_bp
 from controllers.upload_controller import upload_bp
@@ -23,6 +24,7 @@ def create_app():
     app.register_blueprint(upload_bp, url_prefix="/api")
     app.register_blueprint(login_bp, url_prefix="/api")
     app.register_blueprint(projects_dp, url_prefix="/api")
+    app.register_blueprint(personal_center_dp, url_prefix="/api")
     return app
 
 
