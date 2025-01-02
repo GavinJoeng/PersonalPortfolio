@@ -52,8 +52,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 async function fetchAllProjects() {
 
-    const username = localStorage.getItem('username'); // 從 localStorage 獲取用戶名
+    // const username = localStorage.getItem('username'); // 從 localStorage 獲取用戶名
 
+    const username = 'gavinjoeng';
     if (!username) {
         alert('Username not found in localStorage. Please log in.');
         return;
@@ -89,8 +90,8 @@ async function fetchAllProjects() {
 
 // 從後端獲取數據並渲染到頁面
 async function fetchAndRenderProjects() {
-    const username = localStorage.getItem('username'); // 從 localStorage 獲取用戶名
-
+    // const username = localStorage.getItem('username'); // 從 localStorage 獲取用戶名
+    const username = 'gavinjoeng';
     if (!username) {
         alert('Username not found in localStorage. Please log in.');
         return;

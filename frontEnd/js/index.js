@@ -78,7 +78,8 @@ async function fetchIndexInfo(){
 
     try {
         // 从 localStorage 获取用户名
-        const username = localStorage.getItem('username');
+        // const username = localStorage.getItem('username');
+        const username = 'gavinjoeng';
         if (!username) {
             throw new Error('Username is not defined. Please log in.');
         }

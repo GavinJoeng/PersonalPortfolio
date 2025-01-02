@@ -144,6 +144,17 @@ function setupEditModal(project) {
 
     document.getElementById('edit-project-btn').addEventListener('click', openModal);
     document.getElementById('cancel-edit').addEventListener('click', closeModal);
+
+
+    const token = localStorage.getItem('username'); // 從本地存儲獲取 Token
+
+    if (token) {
+        document.getElementById('edit-project-btn').style.display = 'block'; // 顯示按鈕
+    } else {
+        document.getElementById('edit-project-btn').style.display = 'none';
+    }
+
+
     // 禁止重複刷新
     let isUpdating = false;
 
@@ -256,7 +267,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function fetchProjectData(projectId) {
     try {
         // 確保當前使用者已登錄
-        const username = localStorage.getItem('username');
+        // const username = localStorage.getItem('username');
+        const username = 'gavinjoeng';
         if (!username) {
             throw new Error('Username is not available in localStorage');
         }

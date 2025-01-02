@@ -67,6 +67,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 
 
+
+
     // Profile picture upload functionality
     const profilePictureInput = document.querySelector('#edit-profile-picture');
     const profileUploadButton = document.querySelector('#upload-button');
@@ -121,6 +123,17 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 
     })
+
+
+
+
+    const token = localStorage.getItem('username'); // 從本地存儲獲取 Token
+
+    if (token) {
+        document.getElementById('edit-resume-btn').style.display = 'block'; // 顯示按鈕
+    } else {
+        document.getElementById('edit-resume-btn').style.display = 'none';
+    }
 
 
     // 提交 resume
