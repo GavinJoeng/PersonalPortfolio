@@ -1,4 +1,4 @@
-const API_BASE_URL = '"https://cmt120personalportfolio-cmt120-personal-portfolio.apps.containers.cs.cf.ac.uk/api';
+const API_BASE_URL = 'https://cmt120personalportfolio-cmt120-personal-portfolio.apps.containers.cs.cf.ac.uk/api';
 
 
 document.addEventListener('DOMContentLoaded', (event) => {
