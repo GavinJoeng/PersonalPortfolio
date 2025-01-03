@@ -1,0 +1,329 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+    .bg-gradient {
+        background: linear-gradient(to bottom, #1a202c, #2d3748);
+    }
+    .nav-link {
+        transition: color 0.3s;
+    }
+    .nav-link:hover {
+        color: #63b3ed;
+    }
+    .active {
+        color: #4299e1;
+    }
+
+    /* 确保菜单宽度动态调整 */
+    .dropdown-menu {
+        min-width: max-content; /* 内容自动适应 */
+    }
+
+    .navbar {
+        @apply fixed top-0 left-0 right-0 bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-md z-10;
+    }
+
+    .navbar-list {
+        @apply flex justify-center space-x-6 p-4 items-center;
+        height: 64px; /* 確保高度固定 */
+    }
+
+    .nav-user {
+        @apply relative; /* 父元素需要 relative 以支持下拉框的 absolute 定位 */
+    }
+
+    .navbar-login {
+        @apply bg-transparent text-white border border-white px-4 py-2 rounded hover:bg-white hover:text-gray-800 transition-colors;
+    }
+    .navbar-signup {
+        @apply bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors;
+    }
+    .main-container {
+        @apply container mx-auto px-4 pt-20;
+    }
+
+    /* Contact section styles */
+    .contact-section {
+        @apply bg-gray-800 min-h-screen flex flex-col items-center justify-center text-white;
+    }
+
+    .contact-container {
+        @apply flex flex-col items-center justify-center w-full max-w-md px-6 mx-auto gap-8;
+    }
+
+    .contact-heading {
+        @apply text-3xl font-bold mb-6 text-center;
+    }
+
+    .form-container {
+        @apply w-full max-w-md flex flex-col gap-4;
+    }
+
+    .form-space {
+        @apply space-y-4;
+    }
+
+    .form-label {
+        @apply block text-sm font-medium text-gray-300;
+    }
+
+    .form-input,
+    .form-textarea {
+        @apply mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white text-base placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500;
+    }
+
+}
+
+.container {
+    @apply bg-gradient text-white min-h-screen mx-auto;
+}
+
+.container-special {
+    @apply bg-gradient text-white min-h-screen flex items-center justify-center;
+}
+
+
+
+
+/*font*/
+
+/*h1*/
+.heading-h1 {
+    @apply text-5xl font-bold mb-4;
+}
+/*h2*/
+.heading-h2 {
+    @apply text-4xl font-bold mb-8 text-center;
+}
+/*h3*/
+.heading-h3 {
+    @apply text-2xl font-semibold mb-2;
+    @apply text-gray-300; /* 或其他你需要的顏色 */
+}
+/*font*/
+.paragraph-font {
+    @apply text-xl mb-8;
+}
+
+
+/*button*/
+
+.form-button {
+    @apply bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors;
+}
+
+.form-button-bold {
+    @apply bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition-colors;
+}
+.view-all-button {
+    @apply bg-green-500 text-white px-6 py-3 rounded-full hover:bg-green-600 transition-colors text-lg font-semibold;
+}
+
+.btn-full-width {
+    @apply w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors;
+}
+
+.cancel-button {
+    @apply bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700 transition-colors;
+}
+
+.cancel-skills-button {
+    @apply bg-gray-600 text-white py-1 px-3 rounded hover:bg-gray-700 transition duration-300 ease-in-out shadow sm:py-2 sm:px-4;
+}
+
+
+.submit-button {
+    @apply bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors;
+}
+
+
+/* Projects section style*/
+
+.content-section {
+    @apply min-h-screen py-16;
+}
+.projects-card {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-6;
+}
+.subproject-card {
+    @apply bg-gray-800 p-6 rounded-lg transform transition-transform hover:scale-105;
+}
+.subproject-img {
+    @apply w-full h-48 object-cover mb-4 rounded;
+}
+
+/* Resume section style */
+
+.resume-name-font {
+    @apply text-4xl font-bold mb-2;
+}
+.resume-title {
+    @apply text-xl text-blue-400;
+}
+
+.resume-photo {
+    @apply w-32 h-32 rounded-full object-cover mr-6 border-4 border-blue-500;
+}
+
+.resume-card {
+    @apply bg-gray-800 p-8 rounded-lg shadow-xl mb-8;
+}
+
+.resume-header {
+    @apply flex flex-col md:flex-row justify-between items-start md:items-center mb-8;
+}
+
+.resume-photo-name {
+    @apply flex items-center mb-4 md:mb-0;
+}
+
+.resume-email {
+    @apply text-blue-400 hover:underline block mb-1;
+}
+.resume-section-header {
+    @apply text-2xl font-semibold mb-4 border-b border-gray-700 pb-2;
+}
+.resume-description-text {
+    @apply text-gray-300 leading-relaxed;
+}
+
+.resume-section-subhead {
+    @apply text-xl font-semibold;
+}
+
+/* 標籤樣式 */
+.resume-subform-label {
+    @apply text-sm font-medium flex-1 text-left text-gray-300; /* 原有樣式 */
+}
+
+/* 輸入框樣式 */
+.resume-subform-input {
+    @apply mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white text-base placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500;
+}
+
+/* 父容器樣式 */
+.form-container {
+    @apply p-6 bg-gray-800 rounded-lg shadow-lg space-y-6;
+}
+
+/* two columns layout 一行兩列布局 */
+.two-columns-layout {
+    @apply grid grid-cols-2 gap-4 items-center; /* 一行兩列布局 */
+}
+
+
+/* 每个技能块的布局 */
+.three-columns-layout {
+    @apply flex flex-col items-start gap-2; /* 纵向布局，子元素垂直排列 */
+}
+
+/* 标签样式 */
+.resume-skills-label {
+    @apply text-sm font-medium text-left text-gray-300; /* 标签左对齐 */
+}
+
+/* 输入框样式 */
+.resume-skills-input {
+    @apply block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500;
+    height: 2.5rem; /* 输入框高度保持一致 */
+}
+
+/* 删除按钮样式 */
+.cancel-skills-button {
+    @apply bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition duration-300 ease-in-out shadow;
+    height: 2.5rem; /* 高度与输入框一致 */
+    width: 100%; /* 宽度占满所在列 */
+}
+
+
+/* 按鈕容器 */
+.flex-container {
+    @apply flex items-center gap-4; /* 水平排列並保持間距 */
+}
+
+
+
+.resume-list-text {
+    @apply list-disc list-inside text-gray-300 space-y-1;
+}
+
+.resume-experience-time {
+    @apply text-blue-400 mb-2;
+}
+.resume-skills-unordered-list {
+    @apply grid grid-cols-2 md:grid-cols-4 gap-4 text-gray-300;
+}
+.resume-skills-list {
+    @apply bg-gray-700 rounded-full px-4 py-2 text-center;
+}
+
+.back-home-banner {
+    /*flex justify-end space-x-4*/
+    @apply flex justify-between;
+}
+
+.back-home-button {
+    @apply bg-gray-600 text-white px-6 py-3 rounded-full hover:bg-gray-700 transition-colors;
+}
+
+.resume-edit-button {
+    @apply bg-blue-500 text-white px-6 py-3 rounded-full hover:bg-blue-600 transition-colors mt-3;
+}
+
+
+/*Edit resume style*/
+.modal-overlay {
+    @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+    display: none;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+#edit-modal .heading-h2 {
+    color: #e2e8f0;
+}
+
+
+.modal-container {
+    @apply bg-gray-800 p-8 rounded-lg w-full max-w-4xl max-h-screen overflow-y-auto;
+}
+
+.edit-footer {
+    @apply flex justify-end space-x-4;
+}
+
+/*login style*/
+
+.login-section {
+    @apply w-full max-w-md bg-gray-800 rounded-lg shadow-md p-6;
+}
+
+.error-message {
+    @apply mt-4 text-red-500 text-center hidden;
+}
+
+.text-link {
+    @apply text-blue-400 hover:text-blue-300;
+}
+
+
+/*project-detail*/
+
+#edit-modal .bg-gray-800 {
+    overflow-y: auto; /* 启用垂直滚动 */
+    max-height: 90vh; /* 最大高度为视窗高度的 90% */
+}
+
+
+.upload-button {
+    @apply bg-blue-500 text-white px-6 py-3 rounded-full hover:bg-blue-600 transition-colors mt-3;
+}
+
+
+.upload-photo {
+    @apply w-32 h-32 rounded-full object-cover mr-6 border-4 border-blue-500;
+}
