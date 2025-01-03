@@ -1,3 +1,4 @@
+const API_BASE_URL = '"https://cmt120personalportfolio-cmt120-personal-portfolio.apps.containers.cs.cf.ac.uk/api';
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const username = document.getElementById('username').value;
@@ -5,7 +6,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     const errorMessage = document.getElementById('errorMessage');
 
     // 後端 JSON 接口
-    let apiUrl = "http://127.0.0.1:5000/api/login";
+    let apiUrl = `${API_BASE_URL}/login`;
     try {
         const response = await fetch(apiUrl, {
             method: 'POST',

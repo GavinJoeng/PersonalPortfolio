@@ -1,5 +1,6 @@
 let tempPictureId = null; // 儲存臨時圖片 ID
-const API_BASE_URL = "http://127.0.0.1:5000/api";
+//const API_BASE_URL = "http://127.0.0.1:5000/api";
+const API_BASE_URL = '"https://cmt120personalportfolio-cmt120-personal-portfolio.apps.containers.cs.cf.ac.uk/api';
 
 document.addEventListener('DOMContentLoaded', (event) => {
 
@@ -666,7 +667,7 @@ function getResumeInfo() {
     }
 
     // 後端 JSON 接口
-    let apiUrl = "http://127.0.0.1:5000/api/getResumeInfo?user_id=1";
+    let apiUrl = `${API_BASE_URL}/getResumeInfo?user_id=1`;
 
     fetch(apiUrl, {
         method: "GET",

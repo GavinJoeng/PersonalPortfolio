@@ -1,4 +1,6 @@
-const API_BASE_URL = "http://127.0.0.1:5000/api";
+//const API_BASE_URL = "http://127.0.0.1:5000/api";
+const API_BASE_URL = '"https://cmt120personalportfolio-cmt120-personal-portfolio.apps.containers.cs.cf.ac.uk/api';
+
 let tempPictureId = null; // 儲存臨時圖片 ID
 
 

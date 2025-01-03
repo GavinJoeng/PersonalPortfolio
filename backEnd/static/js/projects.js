@@ -1,3 +1,6 @@
+const API_BASE_URL = '"https://cmt120personalportfolio-cmt120-personal-portfolio.apps.containers.cs.cf.ac.uk/api';
+
+
 document.addEventListener('DOMContentLoaded', (event) => {
     const navLinks = document.querySelectorAll('.nav-link');
     const userInfo = document.getElementById('userInfo');
@@ -61,7 +64,7 @@ async function fetchAllProjects() {
     }
 
     try {
-        const response = await fetch(`http://127.0.0.1:5000/api/getAllProjects?username=${encodeURIComponent(username)}`, {
+        const response = await fetch(`${API_BASE_URL}/getAllProjects?username=${encodeURIComponent(username)}`, {
             method: 'GET',
             mode: 'cors', // 啟用跨域
             headers: { 'Content-Type': 'application/json' },
@@ -98,7 +101,7 @@ async function fetchAndRenderProjects() {
     }
 
     try {
-        const response = await fetch(`http://127.0.0.1:5000/api/getFourProjects?username=${encodeURIComponent(username)}`, {
+        const response = await fetch(`${API_BASE_URL}/getFourProjects?username=${encodeURIComponent(username)}`, {
             method: 'GET',
             mode: 'cors', // 啟用跨域
             headers: { 'Content-Type': 'application/json' },

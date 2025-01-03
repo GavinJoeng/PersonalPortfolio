@@ -1,3 +1,5 @@
+const API_BASE_URL = '"https://cmt120personalportfolio-cmt120-personal-portfolio.apps.containers.cs.cf.ac.uk/api';
+
 document.getElementById('signupForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const name = document.getElementById('name').value;
@@ -6,7 +8,7 @@ document.getElementById('signupForm').addEventListener('submit', async (e) => {
     const errorMessage = document.getElementById('errorMessage');
 
     try {
-        const response = await fetch('http://localhost:5000/register', {
+        const response = await fetch(`${API_BASE_URL}/register`, {
             method: 'POST',
             mode: 'cors', // 啟用跨域
             headers: {
