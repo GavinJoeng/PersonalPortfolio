@@ -3,7 +3,7 @@ from mysql.connector import pooling
 
 # 配置連接池
 dbconfig = {
-    "host": "localhost",       # 修改為你的 MySQL 主機
+    "host": "39.108.126.61",       # 修改為你的 MySQL 主機
     "user": "root",            # 修改為你的 MySQL 用戶名
     "password": "GavinJoeng",  # 修改為你的密碼
     "database": "personal_portfolio"  # 修改為你的數據庫名
