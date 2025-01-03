@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    <link href="../static/css/output.css?v=1.0" rel="stylesheet">
+</head>
+<body class="container">
+<div>
+    <nav class="navbar">
+        <ul class="navbar-list">
+            <li><a href="index.html" class="nav-link">Home</a></li>
+            <li><a href="projects.html" class="nav-link">Projects</a></li>
+            <li><a href="resume.html" class="nav-link">Resume</a></li>
+            <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+            <li id="userInfo" class="nav-user">
+                <a href="login.html" class="navbar-login">Login</a>
+            </li>
+            <li><a href="signup.html" class="navbar-signup">Sign Up</a></li>
+        </ul>
+    </nav>
+</div>
+
+<div class="main-container">
+    <section id="resume" class="content-section">
+        <h2 class="heading-h1 text-center">My Resume</h2>
+        <div class="resume-card">
+            <div id="resume-header">
+                <h3>Personal profile</h3>
+            </div>
+
+            <div id="summary-section">
+                <h3>Summary</h3>
+                <p id="summary">...</p>
+            </div>
+
+            <div id="work-experience">
+                <!-- 工作經歷將動態插入 -->
+            </div>
+
+            <div id="education-section">
+                <h3>Education</h3>
+                <h4 id="education-degree"></h4>
+                <p id="education-time"></p>
+                <p id="education-details"></p>
+            </div>
+
+            <div id="skills-section">
+                <h3>Skills</h3>
+                <ul id="skills-list"></ul>
+            </div>
+        </div>
+
+        <div class="back-home-banner" id="backHome">
+            <button class="back-home-button" id="backHomeButton">Return to Home</button>
+            <button id="edit-resume-btn" class="resume-edit-button">Edit Resume</button>
+        </div>
+
+    </section>
+</div>
+
+<!-- Edit Resume Modal -->
+<div id="edit-modal" class="modal-overlay">
+    <div class="modal-container">
+        <h3 class="heading-h2">Edit Resume</h3>
+        <form id="edit-form" class="space-y-4">
+            <div>
+                <label for="edit-name" class="heading-h3">Name</label>
+                <input type="text" id="edit-name" name="name" class="form-input">
+            </div>
+            <div>
+                <label for="edit-title" class="heading-h3">Title</label>
+                <input type="text" id="edit-title" name="title" class="form-input">
+            </div>
+            <div>
+                <label for="edit-email" class="heading-h3">Email</label>
+                <input type="email" id="edit-email" name="email" class="form-input">
+            </div>
+            <div>
+                <label for="edit-phone" class="heading-h3">Phone</label>
+                <input type="tel" id="edit-phone" name="phone" class="form-input">
+            </div>
+            <div>
+                <label for="edit-location" class="heading-h3">Location</label>
+                <input type="text" id="edit-location" name="location" class="form-input">
+            </div>
+            <div>
+                <label for="edit-summary" class="heading-h3">Summary</label>
+                <textarea id="edit-summary" name="summary" rows="4" class="form-input"></textarea>
+            </div>
+            <!-- 工作經歷區域 -->
+            <div>
+                <label class="heading-h3">Work Experience</label>
+                <div id="edit-experience"></div>
+                <button id="add-work-experience" class="resume-edit-button">Add Work Experience</button>
+            </div>
+            <!-- 教育經歷區域 -->
+            <div>
+                <label class="heading-h3">Education</label>
+                <div id="edit-education"></div>
+                <button id="add-education" class="resume-edit-button">Add Education Experience</button>
+            </div>
+            <!--技能區域-->
+            <div>
+                <label class="heading-h3">Skills</label>
+                <div id="edit-skills"></div>
+                <button id="add-skills" class="resume-edit-button">Add Skills</button>
+            </div>
+
+            <div>
+                <label for="edit-profile-picture" class="heading-h3">Profile Picture</label>
+                <input type="file" id="edit-profile-picture" name="profile-picture" accept="image/*" class="form-input">
+                <!-- 預覽圖片的 img 元素 -->
+                <img id="preview-image" src="" alt="Preview" class="resume-photo hidden">
+                <button id="upload-button" class="resume-edit-button">Upload</button>
+
+            </div>
+            <div class="edit-footer">
+                <button type="button" id="cancel-edit" class="cancel-button">Cancel</button>
+                <button type="submit" class="form-button">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="../static/js/resume.js"></script>
+</body>
+</html>
+

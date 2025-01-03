@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personal Center</title>
+  <link href="../static/css/output.css?v=1.0" rel="stylesheet">
+</head>
+<body class="container">
+<div>
+  <nav class="navbar">
+    <ul class="navbar-list">
+      <li><a href="index.html" class="nav-link">Home</a></li>
+      <li><a href="projects.html" class="nav-link">Projects</a></li>
+      <li><a href="resume.html" class="nav-link">Resume</a></li>
+      <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+      <li id="userInfo" class="nav-user">
+        <a href="login.html" class="navbar-login">Login</a>
+      </li>
+      <li><a href="signup.html" class="navbar-signup">Sign Up</a></li>
+    </ul>
+  </nav>
+</div>
+
+
+<div class="main-container">
+  <h2 class="heading-h2 text-center">Personal Center</h2>
+
+  <!-- Right Section -->
+  <div class="mb-8">
+    <h3 class="heading-h3">Personal Information Management</h3>
+    <div class="mb-4">
+      <label class="resume-description-text font-bold">Username</label>
+      <p id="username-display" class="resume-description-text">gavinjoeng</p>
+    </div>
+    <div class="mb-4">
+      <label class="resume-description-text font-bold">Phone</label>
+      <p id="phone-display" class="resume-description-text">97985186</p>
+    </div>
+    <div class="mb-4">
+      <label class="resume-description-text font-bold">Email</label>
+      <p id="email-display" class="resume-description-text">gavinjoeng@gmail.com</p>
+    </div>
+    <div class="mb-4">
+      <label class="resume-description-text font-bold">Welcome Text</label>
+      <p id="welcome-text-display" class="resume-description-text">Welcome to My Portfolio</p>
+    </div>
+    <div class="mb-4">
+      <label class="resume-description-text font-bold">Introduction</label>
+      <p id="intro-text-display" class="resume-description-text">I'm a passionate web developer creating amazing digital experiences.</p>
+    </div>
+
+    <!-- 修改按鈕 -->
+    <button id="edit-button" class="submit-button">
+      Edit Personal Information
+    </button>
+  </div>
+
+  <!-- 消息中心 -->
+  <div class="mb-8">
+    <h3 class="heading-h3">Notification Center</h3>
+    <div class="space-y-4" id="messages-container">
+      <div class="p-4 border border-gray-300 rounded-md shadow-sm">
+        <p class="resume-description-text">John Doe</p>
+        <p class="resume-description-text">Email: john.doe@example.com</p>
+        <p class="resume-description-text">Message: Hello! I wanted to connect regarding your projects.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Window -->
+<div id="modal-overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+  <div class="modal-container bg-gray-900 text-white p-6 rounded-lg shadow-lg w-full max-w-md">
+    <h3 class="resume-section-header text-xl font-semibold mb-4">Edit Personal Information</h3>
+    <div class="mb-4">
+      <label for="username-input" class="resume-description-text">Username</label>
+      <input id="username-input" type="text" class="form-textarea" value="gavinjoeng">
+    </div>
+    <div class="mb-4">
+      <label for="phone-input" class="resume-description-text">Phone</label>
+      <input id="phone-input" type="text" class="form-textarea" value="97985186">
+    </div>
+    <div class="mb-4">
+      <label for="email-input" class="resume-description-text">Email</label>
+      <input id="email-input" type="email" class="form-textarea" value="gavinjoeng@gmail.com">
+    </div>
+    <div class="mb-4">
+      <label for="welcome-text-input" class="resume-description-text">Welcome Text</label>
+      <textarea id="welcome-text-input" class="form-textarea">Welcome to My Portfolio</textarea>
+    </div>
+    <div class="mb-4">
+      <label for="intro-text-input" class="resume-description-text">Introduction</label>
+      <textarea id="intro-text-input" class="form-textarea">I'm a passionate web developer creating amazing digital experiences.</textarea>
+    </div>
+    <div class="edit-footer">
+      <button id="cancel-button" class="cancel-button">Cancel</button>
+      <button id="save-button" class="submit-button">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+
+<script src="../static/js/personal-center.js"></script>
+</body>
+</html>

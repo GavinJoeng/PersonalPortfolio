@@ -1,0 +1,12 @@
+{
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "postcss-cli": "^11.0.0",
+    "tailwindcss": "^3.4.17"
+  },
+  "scripts": {
+    "build": "postcss ./static/css/styles.css -o ./static/css/output.css",
+    "dev": "postcss ./static/css/styles.css -o ./static/css/output.css --watch"
+  }
+}
