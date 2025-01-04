@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Projects - Portfolio</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .bg-gradient {
+            background: linear-gradient(to bottom, #1a202c, #2d3748);
+        }
+        .nav-link {
+            transition: color 0.3s;
+        }
+        .nav-link:hover {
+            color: #63b3ed;
+        }
+        .active {
+            color: #4299e1;
+        }
+    </style>
+</head>
+<body class="bg-gradient text-white min-h-screen">
+    <nav class="fixed top-0 left-0 right-0 bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-md z-10">
+        <ul class="flex justify-center space-x-6 p-4">
+            <li><a href="index.html" class="nav-link capitalize">Home</a></li>
+            <li><a href="projects.html" class="nav-link capitalize">Projects</a></li>
+            <li><a href="resume.html" class="nav-link capitalize">Resume</a></li>
+            <li><a href="index.html#contact" class="nav-link capitalize">Contact</a></li>
+            <li><a href="login.html" class="bg-transparent text-white border border-white px-4 py-2 rounded hover:bg-white hover:text-gray-800 transition-colors">Login</a></li>
+            <li><a href="signup.html" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">Sign Up</a></li>
+        </ul>
+    </nav>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const currentPage = window.location.pathname.split('/').pop();
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === currentPage || (currentPage === '' && link.getAttribute('href') === '#home')) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        });
+    </script>
+
+    <div class="container mx-auto px-4 pt-20">
+        <section id="projects" class="min-h-screen py-16">
+            <h2 class="text-4xl font-bold mb-8 text-center">My Projects</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-gray-800 p-6 rounded-lg transform transition-transform hover:scale-105">
+                    <img src="/placeholder.svg?height=200&width=300" alt="Project 1" class="w-full h-48 object-cover mb-4 rounded">
+                    <h3 class="text-2xl font-semibold mb-2">Project 1</h3>
+                    <p class="mb-4">A brief description of project 1 and the technologies used.</p>
+                    <a href="project-detail.html?id=1" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">Learn More</a>
+                </div>
+                <div class="bg-gray-800 p-6 rounded-lg transform transition-transform hover:scale-105">
+                    <img src="/placeholder.svg?height=200&width=300" alt="Project 2" class="w-full h-48 object-cover mb-4 rounded">
+                    <h3 class="text-2xl font-semibold mb-2">Project 2</h3>
+                    <p class="mb-4">A brief description of project 2 and the technologies used.</p>
+                    <a href="project-detail.html?id=2" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">Learn More</a>
+                </div>
+                <div class="bg-gray-800 p-6 rounded-lg transform transition-transform hover:scale-105">
+                    <img src="/placeholder.svg?height=200&width=300" alt="Project 3" class="w-full h-48 object-cover mb-4 rounded">
+                    <h3 class="text-2xl font-semibold mb-2">Project 3</h3>
+                    <p class="mb-4">A brief description of project 3 and the technologies used.</p>
+                    <a href="project-detail.html?id=3" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">Learn More</a>
+                </div>
+                <div class="bg-gray-800 p-6 rounded-lg transform transition-transform hover:scale-105">
+                    <img src="/placeholder.svg?height=200&width=300" alt="Project 4" class="w-full h-48 object-cover mb-4 rounded">
+                    <h3 class="text-2xl font-semibold mb-2">Project 4</h3>
+                    <p class="mb-4">A brief description of project 4 and the technologies used.</p>
+                    <a href="project-detail.html?id=4" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">Learn More</a>
+                </div>
+            </div>
+            <div class="text-center mt-12">
+                <a href="#" class="bg-green-500 text-white px-6 py-3 rounded-full hover:bg-green-600 transition-colors text-lg font-semibold">View All Projects</a>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
+

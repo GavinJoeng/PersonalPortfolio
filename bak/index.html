@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .bg-gradient {
+            background: linear-gradient(to bottom, #1a202c, #2d3748);
+        }
+        .nav-link {
+            transition: color 0.3s;
+        }
+        .nav-link:hover {
+            color: #63b3ed;
+        }
+        .active {
+            color: #4299e1;
+        }
+    </style>
+</head>
+<body class="bg-gradient text-white min-h-screen">
+<nav class="fixed top-0 left-0 right-0 bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-md z-10">
+    <ul class="flex justify-center space-x-6 p-4">
+        <li><a href="index.html" class="nav-link capitalize">Home</a></li>
+        <li><a href="projects.html" class="nav-link capitalize">Projects</a></li>
+        <li><a href="resume.html" class="nav-link capitalize">Resume</a></li>
+        <li><a href="#contact" class="nav-link capitalize">Contact</a></li>
+        <li><a href="login.html" class="bg-transparent text-white border border-white px-4 py-2 rounded hover:bg-white hover:text-gray-800 transition-colors">Login</a></li>
+        <li><a href="signup.html" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">Sign Up</a></li>
+    </ul>
+</nav>
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        function setActiveLink() {
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html'; // 默認為 index.html
+            const hash = window.location.hash;
+
+            navLinks.forEach(link => {
+                const href = link.getAttribute('href');
+
+                // 僅匹配 pathname 或 hash，避免重複激活
+                if ((href === currentPage && !hash) || href === hash) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        }
+
+        setActiveLink();
+
+        // 監聽 hash 變化
+        window.addEventListener('hashchange', setActiveLink);
+    });
+</script>
+
+<div class="container mx-auto px-4 pt-20">
+    <section id="home" class="min-h-screen flex items-center justify-center">
+        <div class="text-center">
+            <h1 class="text-5xl font-bold mb-4" id="welcome-text">Welcome to My Portfolio</h1>
+            <p class="text-xl mb-8" id="intro-text">I'm a passionate web developer creating amazing digital experiences.</p>
+            <a href="projects.html" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition-colors">
+                View My Projects
+            </a>
+        </div>
+    </section>
+
+    <section id="contact" class="min-h-screen py-16">
+        <h2 class="text-4xl font-bold mb-8 text-center">Get in Touch</h2>
+        <div class="max-w-md mx-auto">
+            <form class="space-y-4">
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-300">Name</label>
+                    <input type="text" id="name" name="name" required class="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-300">Email</label>
+                    <input type="email" id="email" name="email" required class="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="message" class="block text-sm font-medium text-gray-300">Message</label>
+                    <textarea id="message" name="message" rows="4" required class="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors">Send Message</button>
+            </form>
+        </div>
+    </section>
+</div>
+</body>
+</html>
+

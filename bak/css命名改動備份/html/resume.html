@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    <link href="../css/output.css" rel="stylesheet">
+</head>
+<body class="container">
+    <nav class="navbar">
+        <ul class="navbar-list">
+            <li><a href="index.html" class="nav-link">Home</a></li>
+            <li><a href="projects.html" class="nav-link">Projects</a></li>
+            <li><a href="resume.html" class="nav-link">Resume</a></li>
+            <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+            <li><a href="login.html" class="navbar-login">Login</a></li>
+            <li><a href="signup.html" class="navbar-signup">Sign Up</a></li>
+        </ul>
+    </nav>
+
+<div class="main-container">
+    <section id="resume" class="content-section">
+        <h2 class="heading-h1 text-center">My Resume</h2>
+        <div class="resume-card">
+            <div class="resume-header">
+                <div class="resume-photo-name">
+                    <img id="profile-picture" src="/placeholder.svg?height=150&width=150" alt="John Doe" class="resume-photo">
+                    <div>
+                        <h3 class="resume-name-font">John Doe</h3>
+                        <p class="resume-title">Senior Web Developer</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <a href="mailto:john.doe@example.com" class="resume-email">john.doe@example.com</a>
+                    <p class="mb-1">(123) 456-7890</p>
+                    <p>New York, NY</p>
+                </div>
+            </div>
+
+            <div class="mb-10">
+                <h3 class="resume-section-header">Summary</h3>
+                <p class="resume-description-text">Experienced web developer with a strong background in front-end and back-end technologies. Passionate about creating responsive and user-friendly web applications. Skilled in leading development teams and mentoring junior developers.</p>
+            </div>
+
+            <div class="mb-10">
+                <h3 class="resume-section-header">Work Experience</h3>
+                <div class="mb-6">
+                    <h4 class="resume-section-subheader">Senior Web Developer</h4>
+                    <p class="resume-experience-time">TechCorp Inc. | 2018 - Present</p>
+                    <ul class="resume-list-text">
+                        <li>Led development of multiple high-traffic websites, resulting in a 30% increase in user engagement</li>
+                        <li>Implemented responsive design principles, improving mobile user experience by 40%</li>
+                        <li>Mentored junior developers, increasing team productivity by 25%</li>
+                        <li>Optimized database queries, reducing load times by 50%</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="resume-section-subheader">Web Developer</h4>
+                    <p class="resume-experience-time">WebSolutions Co. | 2015 - 2018</p>
+                    <ul class="resume-list-text">
+                        <li>Developed and maintained over 20 client websites using HTML, CSS, and JavaScript</li>
+                        <li>Collaborated with design team to implement UI/UX improvements, increasing client satisfaction by 35%</li>
+                        <li>Optimized website performance and SEO, resulting in a 25% increase in organic traffic</li>
+                        <li>Implemented version control systems, reducing code conflicts by 60%</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mb-10">
+                <h3 class="resume-section-header">Education</h3>
+                <div>
+                    <h4 class="resume-section-subheader">Bachelor of Science in Computer Science</h4>
+                    <p class="resume-experience-time">University of Technology | 2011 - 2015</p>
+                    <p class="resume-description-text">Relevant coursework: Web Development, Database Management, Algorithms, Software Engineering</p>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="resume-section-header">Skills</h3>
+                <ul class="resume-skills-unordered-list">
+                    <li class="resume-skills-list">HTML5 / CSS3</li>
+                    <li class="resume-skills-list">JavaScript / TypeScript</li>
+                    <li class="resume-skills-list">React / Vue.js</li>
+                    <li class="resume-skills-list">Node.js / Express</li>
+                    <li class="resume-skills-list">Python / Django</li>
+                    <li class="resume-skills-list">SQL / NoSQL Databases</li>
+                    <li class="resume-skills-list">Git / Version Control</li>
+                    <li class="resume-skills-list">Agile / Scrum</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="back-home-banner" id="backHome">
+            <button class="back-home-button" id="backHomeButton">Return to Home</button>
+            <button id="edit-resume-btn" class="resume-edit-button">Edit Resume</button>
+        </div>
+    </section>
+</div>
+
+<!-- Edit Resume Modal -->
+<div id="edit-modal" class="modal-overlay">
+    <div class="modal-container">
+        <h3 class="heading-h2">Edit Resume</h3>
+        <form id="edit-form" class="space-y-4">
+            <div>
+                <label for="edit-name" class="form-label">Name</label>
+                <input type="text" id="edit-name" name="name" class="form-input">
+            </div>
+            <div>
+                <label for="edit-email" class="form-label">Email</label>
+                <input type="email" id="edit-email" name="email" class="form-input">
+            </div>
+            <div>
+                <label for="edit-phone" class="form-label">Phone</label>
+                <input type="tel" id="edit-phone" name="phone" class="form-input">
+            </div>
+            <div>
+                <label for="edit-location" class="form-label">Location</label>
+                <input type="text" id="edit-location" name="location" class="form-input">
+            </div>
+            <div>
+                <label for="edit-summary" class="form-label">Summary</label>
+                <textarea id="edit-summary" name="summary" rows="4" class="form-input"></textarea>
+            </div>
+            <div>
+                <label for="edit-experience" class="form-label">Work Experience</label>
+                <textarea id="edit-experience" name="experience" rows="6" class="form-input"></textarea>
+            </div>
+            <div>
+                <label for="edit-education" class="form-label">Education</label>
+                <textarea id="edit-education" name="education" rows="4" class="form-input"></textarea>
+            </div>
+            <div>
+                <label for="edit-skills" class="form-label">Skills (comma-separated)</label>
+                <input type="text" id="edit-skills" name="skills" class="form-input">
+            </div>
+            <div>
+                <label for="edit-profile-picture" class="form-label">Profile Picture</label>
+                <input type="file" id="edit-profile-picture" name="profile-picture" accept="image/*" class="form-input">
+            </div>
+            <div class="edit-footer">
+                <button type="button" id="cancel-edit" class="cancel-button">Cancel</button>
+                <button type="submit" class="form-button">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="../js/resume.js"></script>
+</body>
+</html>
+

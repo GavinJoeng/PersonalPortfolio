@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    <link href="css/output.css" rel="stylesheet">
+</head>
+<body class="container">
+<nav class="navbar">
+    <ul class="navbar-list">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="html/projects.html" class="nav-link">Projects</a></li>
+        <li><a href="html/resume.html" class="nav-link">Resume</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
+        <li><a href="html/login.html" class="navbar-login">Login</a></li>
+        <li><a href="html/signup.html" class="navbar-signup">Sign Up</a></li>
+    </ul>
+</nav>
+
+
+
+<div class="main-container">
+    <section id="home" class="container-special">
+        <div class="text-center">
+            <h1 class="heading-h1" id="welcome-text">Welcome to My Portfolio</h1>
+            <p class="paragraph-font" id="intro-text">I'm a passionate web developer creating amazing digital experiences.</p>
+            <a href="html/projects.html" class="form-button-bold">View my Projects</a>
+        </div>
+    </section>
+
+    <section id="projects-container"></section>
+
+    <section id="resume-container"></section>
+
+
+
+    <section id="contact" class="contact-section">
+        <h2 class="heading-h2">Get in Touch</h2>
+        <div class="form-container">
+            <form class="form-space">
+                <div>
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" id="name" name="name" required class="form-input">
+                </div>
+                <div>
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" name="email" required class="form-input">
+                </div>
+                <div>
+                    <label for="message" class="form-label">Message</label>
+                    <textarea id="message" name="message" rows="4" required class="form-textarea"></textarea>
+                </div>
+                <button type="submit" class="btn-full-width">Send Message</button>
+            </form>
+        </div>
+    </section>
+</div>
+
+<script src="js/index.js"></script>
+
+</body>
+</html>
+
