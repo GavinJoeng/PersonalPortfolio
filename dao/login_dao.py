@@ -2,10 +2,10 @@ from config.db_config import get_db_connection
 
 class login_dao:
     GET_USERS_QUERY = """
-            SELECT id, username, email, password_hash FROM users WHERE username = %s
+            SELECT id, username, email, password_hash FROM users WHERE username = ?
         """
     INSERT_USER_QUERY = """
-            INSERT INTO users (username, email, password_hash) VALUES (%s, %s, %s)
+            INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)
         """
 
     def get_user_by_username(self, username):
@@ -16,7 +16,7 @@ class login_dao:
         """
         connection = get_db_connection()  # 從連接池獲取連接
         try:
-            cursor = connection.cursor(dictionary=True)  # 使用字典游標返回列名
+            cursor = connection.cursor()  # SQLite 使用的是常規游標
             cursor.execute(self.GET_USERS_QUERY, (username,))
             result = cursor.fetchone()
             return result  # 返回結果 (可以是 None 或字典)

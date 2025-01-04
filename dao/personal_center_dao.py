@@ -2,7 +2,7 @@ from config.db_config import get_db_connection
 
 class personal_center_dao:
     GET_PERSONAL_INFO_QUERY = """
-            SELECT
+        SELECT
                 a.id AS user_id,
                 a.username AS user_username,
                 c.phone AS user_phone,
@@ -17,7 +17,7 @@ class personal_center_dao:
                 messages b,
                 resume c
             WHERE
-                a.username = %s
+                a.username = ?
                 AND a.status = 1
                 AND b.user_id = a.id
                 AND c.user_id = a.id
@@ -25,7 +25,7 @@ class personal_center_dao:
             ORDER BY
             b.created_at DESC
             LIMIT 10
-        """
+    """
 
     GET_INDEX_INFO_QUERY = """
         SELECT 
@@ -34,117 +34,157 @@ class personal_center_dao:
         introduction AS user_introduction
         FROM users
         WHERE 
-        username = %s
+        username = ?
         AND status = 1
-        
     """
 
     INSERT_USER_MSG = """
-    INSERT INTO message (user_id, webpage_id, `name`, email, message)
-    VALUES ( %s, %s, %s, %s, %s)
+        INSERT INTO messages (user_id, webpage_id, name, email, message)
+        VALUES (?, ?, ?, ?, ?)
     """
 
+    def _convert_to_dict(self, cursor):
+        """
+        Convert query results to a list of dictionaries.
+        """
+        columns = [desc[0] for desc in cursor.description]
+        return [dict(zip(columns, row)) for row in cursor.fetchall()]
+
     def get_personal_info(self, username):
+        """
+        Fetch personal info for a given username.
+        """
         try:
             with get_db_connection() as connection:
-                with connection.cursor(dictionary=True) as cursor:
-                    cursor.execute(self.GET_PERSONAL_INFO_QUERY, (username,))
-                    # 不只是一條數據噢!!!
-                    result = cursor.fetchall()
-                    return result if result else None
+                cursor = connection.cursor()
+                cursor.execute(self.GET_PERSONAL_INFO_QUERY, (username,))
+                result = self._convert_to_dict(cursor)
+                return result if result else None
         except Exception as e:
             print(f"Database query failed: {e}")
             return None
 
-    def get_index_info(self,username):
+    def get_index_info(self, username):
+        """
+        Fetch index info for a given username.
+        """
         try:
             with get_db_connection() as connection:
-                with connection.cursor(dictionary=True) as cursor:
-                    cursor.execute(self.GET_INDEX_INFO_QUERY, (username,))
-                    result = cursor.fetchone()
-                    return result if result else None
+                cursor = connection.cursor()
+                cursor.execute(self.GET_INDEX_INFO_QUERY, (username,))
+                row = cursor.fetchone()
+                if row:
+                    columns = [desc[0] for desc in cursor.description]
+                    return dict(zip(columns, row))
+                return None
         except Exception as e:
             print(f"Database query failed: {e}")
             return None
 
-    def update_personal_info(self, personal_info):
+
+
+    def send_msg(self, msg):
+        """
+        Insert a new message.
+        """
         try:
             with get_db_connection() as connection:
-                with connection.cursor(dictionary=True) as cursor:
-                    print(f"Executing SQL with data: {personal_info}")  # 調試用
-                    query, params = generate_update_query(personal_info)
-                    # 執行查詢
-                    cursor.execute(query, params)
-                    # 提交更改
-                    connection.commit()
-                    return cursor.rowcount > 0  # 確保至少有一行更新
+                cursor = connection.cursor()
+                cursor.execute(self.INSERT_USER_MSG, msg)
+                connection.commit()
+                return cursor.rowcount > 0
         except Exception as e:
-            print(f"Database update failed: {e}")
+            print(f"Database insert failed: {e}")
             try:
-                connection.rollback()  # 如果提交失敗，進行回滾
+                connection.rollback()
             except Exception as rollback_error:
                 print(f"Rollback failed: {rollback_error}")
             return False
 
-    def send_msg(self,msg):
+    def update_personal_info(self, personal_info):
+        """
+        Update personal information (welcome text, introduction, phone, email).
+        Only updates fields that are provided in the input data.
+        """
         try:
             with get_db_connection() as connection:
-                with connection.cursor(dictionary=True) as cursor:
-                    # 執行查詢
-                    cursor.execute(self.INSERT_USER_MSG, msg)
-                    # 提交更改
+                cursor = connection.cursor()
+
+                # Generate the update queries and parameters
+                update_queries, params = self.generate_update_queries(personal_info)
+
+                # Execute queries if there are any to update
+                if update_queries:
+                    for query in update_queries:
+                        cursor.execute(query, params)
+
                     connection.commit()
-                    return cursor.rowcount > 0  # 確保至少有一行更新
+                    return True
+
         except Exception as e:
-            print(f"Database update failed: {e}")
-        try:
-            connection.rollback()  # 如果提交失敗，進行回滾
-        except Exception as rollback_error:
-            print(f"Rollback failed: {rollback_error}")
-        return False
+            print(f"Error updating personal info: {e}")
+            try:
+                connection.rollback()
+            except Exception as rollback_error:
+                print(f"Rollback failed: {rollback_error}")
+            return False
 
 
-def generate_update_query(data, table_name="users a, resume b", condition="a.username = %(user_username)s AND b.user_id = a.id AND b.is_active = 1 AND a.status = 1"):
-    """
-    Generates a dynamic SQL UPDATE query.
+    def generate_update_queries(self, personal_info):
+        """
+        Generate SQL update queries based on the fields provided in the input data.
+        Only includes fields that are provided.
+        """
+        update_queries = []
+        params = {}
 
-    :param data: A dictionary containing column-value pairs to be updated.
-    :param table_name: The table(s) to be updated.
-    :param condition: The WHERE clause condition as a string.
-    :return: A tuple containing the SQL query string and the parameters for the query.
-    """
-    if not table_name:
-        raise ValueError("Table name must be provided.")
-    if not condition:
-        raise ValueError("Condition must be provided to prevent updating all rows.")
+        # Update users table
+        if 'user_welcome_text' in personal_info or 'user_introduction' in personal_info:
+            set_clause = []
+            if 'user_welcome_text' in personal_info:
+                set_clause.append("welcome_text = :user_welcome_text")
+                params['user_welcome_text'] = personal_info['user_welcome_text']
+            if 'user_introduction' in personal_info:
+                set_clause.append("introduction = :user_introduction")
+                params['user_introduction'] = personal_info['user_introduction']
 
-    base_query = f"UPDATE {table_name} SET "
-    update_fields = []
-    params = {}
+            if set_clause:
+                update_queries.append(
+                    f"UPDATE users SET {', '.join(set_clause)} WHERE username = :username AND status = 1")
+                params['username'] = personal_info['username']
 
-    # Dynamically add fields to update
-    if data.get("user_phone") is not None:
-        update_fields.append("b.phone = %(user_phone)s")
-        params["user_phone"] = data["user_phone"]
-    if data.get("user_email") is not None:
-        update_fields.append("b.email = %(user_email)s")
-        params["user_email"] = data["user_email"]
-    if data.get("user_welcome_text") is not None:
-        update_fields.append("a.welcome_text = %(user_welcome_text)s")
-        params["user_welcome_text"] = data["user_welcome_text"]
-    if data.get("user_introduction") is not None:
-        update_fields.append("a.introduction = %(user_introduction)s")
-        params["user_introduction"] = data["user_introduction"]
+        # Update resume table
+        if 'user_phone' in personal_info or 'user_email' in personal_info:
+            set_clause = []
+            if 'user_phone' in personal_info:
+                set_clause.append("phone = :user_phone")
+                params['user_phone'] = personal_info['user_phone']
+            if 'user_email' in personal_info:
+                set_clause.append("email = :user_email")
+                params['user_email'] = personal_info['user_email']
 
-    # Add conditional parameters
-    params["user_username"] = data.get("user_username")
+            if set_clause:
+                update_queries.append(f"""
+                    UPDATE resume 
+                    SET {', '.join(set_clause)} 
+                    WHERE user_id = (SELECT id FROM users WHERE username = :username) AND is_active = 1
+                """)
 
-    # If no fields to update, raise an error
-    if not update_fields:
-        raise ValueError("No fields to update.")
-
-    # Combine query
-    query = base_query + ", ".join(update_fields) + f" WHERE {condition}"
-    return query, params
+        return update_queries, params
 
 
+if __name__ == '__main__':
+    # 創建 PersonalCenterDAO 的實例
+    dao = personal_center_dao()
+
+    # 測試數據
+    test_username = "gavinjoeng"  # Replace with a valid username in your database
+
+    # 測試 get_index_info 方法
+    print("Testing get_index_info...")
+    index_info = dao.get_index_info(test_username)
+    if index_info:
+        print("Index Info Retrieved Successfully:")
+        print(index_info)
+    else:
+        print("No data found for the provided username.")

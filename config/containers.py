@@ -1,5 +1,4 @@
 from dependency_injector import containers, providers
-
 from dao.personal_center_dao import personal_center_dao
 from dao.projects_dao import projects_dao
 from dao.resume_dao import resume_dao

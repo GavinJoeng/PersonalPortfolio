@@ -17,6 +17,8 @@ class resume_service:
         # print(f'service user_id: {user_id}')
         # 使用實例調用方法
         result = self.dao.get_resume_info(user_id)
+        # Initialize mime_type with a default value
+        mime_type = "image/jpeg"
 
         if result:
             # JSON 解析

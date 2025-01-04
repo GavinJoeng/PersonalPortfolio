@@ -1,44 +1,110 @@
-import mysql.connector
-from mysql.connector import pooling
+import sqlite3
+from threading import Lock
+import os
 
-# 配置連接池
+# Get the directory of the current script
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Configure the SQLite database file using a relative path
 dbconfig = {
-    "host": "44.211.123.85",       # 修改為你的 MySQL 主機
-    "user": "gavinjoeng",            # 修改為你的 MySQL 用戶名
-    "password": "Joeng97@0",  # 修改為你的密碼
-    "database": "personal_portfolio"  # 修改為你的數據庫名
+    "database": os.path.join(current_dir, "../personal_portfolio.db")
 }
+# Simulated connection pool
+class sqlite_connection_pool:
+    def __init__(self, database, pool_size=5):
+        self.database = database
+        self.pool_size = pool_size
+        self.connections = []
+        self.lock = Lock()
 
-# 創建連接池
-connection_pool = pooling.MySQLConnectionPool(
-    pool_name="mypool",
-    pool_size=5,       # 池中的最大連接數
-    **dbconfig
+    def get_connection(self):
+        """
+        Get a connection from the pool, or create a new one if the pool is empty.
+        """
+        with self.lock:
+            if self.connections:
+                # Reuse an existing connection
+                return self.connections.pop()
+            else:
+                # Create a new connection
+                try:
+                    connection = sqlite3.connect(self.database)
+                    # Optional: Set row factory for dictionary-like result
+                    connection.row_factory = sqlite3.Row
+                    print(f"New SQLite connection created to database: {self.database}")
+                    return connection
+                except sqlite3.Error as e:
+                    print(f"Failed to create SQLite connection: {e}")
+                    raise
+
+    def return_connection(self, connection):
+        with self.lock:
+            try:
+                # Validate connection before returning to the pool
+                cursor = connection.cursor()
+                cursor.execute("SELECT 1;")
+                cursor.close()
+                if len(self.connections) < self.pool_size:
+                    self.connections.append(connection)
+                else:
+                    connection.close()
+            except sqlite3.Error as e:
+                print(f"Invalid connection discarded: {e}")
+                connection.close()
+
+# Create an SQLite connection pool
+connection_pool = sqlite_connection_pool(
+    database=dbconfig["database"],
+    pool_size=5  # Maximum number of connections in the pool
 )
 
 def get_db_connection():
     """
-    從連接池中獲取一個連接。
+    Get a connection from the connection pool.
     """
     try:
         connection = connection_pool.get_connection()
-        print("成功獲取數據庫連接")
+        print("Successfully obtained a database connection")
         return connection
-    except mysql.connector.Error as e:
-        print(f"獲取連接失敗: {e}")
-        return None
+    except sqlite3.Error as e:
+        print(f"Failed to obtain connection: {e}")
+        raise
 
-# 示例用法
+
+
+GET_INDEX_INFO_QUERY = """
+       SELECT 
+       id AS user_id,
+       welcome_text AS user_welcome_text,
+       introduction AS user_introduction
+       FROM users
+       WHERE 
+       username = ?
+       AND status = 1
+   """
+# Example usage
 if __name__ == "__main__":
-    # 測試獲取連接
+    # Test obtaining a connection from the pool
     conn = get_db_connection()
     if conn:
         try:
             cursor = conn.cursor()
-            cursor.execute("SELECT DATABASE();")  # 測試查詢當前數據庫
-            result = cursor.fetchone()
-            print(f"當前數據庫: {result[0]}")
+
+            # Query data from the `users` table using the correct query
+            cursor.execute(GET_INDEX_INFO_QUERY, ('gavinjoeng',))
+            rows = cursor.fetchall()  # Fetch all data
+
+            if rows:
+                print("User information:")
+                for row in rows:
+                    print(f"User ID: {row['user_id']}")
+                    print(f"Welcome Text: {row['user_welcome_text']}")
+                    print(f"Introduction: {row['user_introduction']}")
+            else:
+                print("No data found for the specified username.")
+        except sqlite3.Error as e:
+            print(f"Error occurred during query: {e}")
         finally:
-            cursor.close()
-            conn.close()  # 記得關閉連接，返回給連接池
-            print("連接已返回連接池")
+            # Return the connection to the connection pool
+            connection_pool.return_connection(conn)
+            print("Connection returned to the pool")
