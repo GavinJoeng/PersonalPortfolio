@@ -110,8 +110,41 @@ class personal_center_dao:
             with get_db_connection() as connection:
                 cursor = connection.cursor()
 
-                # Generate the update queries and parameters
-                update_queries, params = self.generate_update_queries(personal_info)
+                # Prepare SQL query and parameters
+                update_queries = []
+                params = {}
+
+                # Update users table
+                if 'user_welcome_text' in personal_info or 'user_introduction' in personal_info:
+                    set_clause = []
+                    if 'user_welcome_text' in personal_info:
+                        set_clause.append("welcome_text = :user_welcome_text")
+                        params['user_welcome_text'] = personal_info['user_welcome_text']
+                    if 'user_introduction' in personal_info:
+                        set_clause.append("introduction = :user_introduction")
+                        params['user_introduction'] = personal_info['user_introduction']
+
+                    if set_clause:
+                        update_queries.append(
+                            f"UPDATE users SET {', '.join(set_clause)} WHERE username = :username AND status = 1")
+                        params['username'] = personal_info['username']
+
+                # Update resume table
+                if 'user_phone' in personal_info or 'user_email' in personal_info:
+                    set_clause = []
+                    if 'user_phone' in personal_info:
+                        set_clause.append("phone = :user_phone")
+                        params['user_phone'] = personal_info['user_phone']
+                    if 'user_email' in personal_info:
+                        set_clause.append("email = :user_email")
+                        params['user_email'] = personal_info['user_email']
+
+                    if set_clause:
+                        update_queries.append(f"""
+                            UPDATE resume 
+                            SET {', '.join(set_clause)} 
+                            WHERE user_id = (SELECT id FROM users WHERE username = :username) AND is_active = 1
+                        """)
 
                 # Execute queries if there are any to update
                 if update_queries:
@@ -129,48 +162,6 @@ class personal_center_dao:
                 print(f"Rollback failed: {rollback_error}")
             return False
 
-
-    def generate_update_queries(self, personal_info):
-        """
-        Generate SQL update queries based on the fields provided in the input data.
-        Only includes fields that are provided.
-        """
-        update_queries = []
-        params = {}
-
-        # Update users table
-        if 'user_welcome_text' in personal_info or 'user_introduction' in personal_info:
-            set_clause = []
-            if 'user_welcome_text' in personal_info:
-                set_clause.append("welcome_text = :user_welcome_text")
-                params['user_welcome_text'] = personal_info['user_welcome_text']
-            if 'user_introduction' in personal_info:
-                set_clause.append("introduction = :user_introduction")
-                params['user_introduction'] = personal_info['user_introduction']
-
-            if set_clause:
-                update_queries.append(
-                    f"UPDATE users SET {', '.join(set_clause)} WHERE username = :username AND status = 1")
-                params['username'] = personal_info['username']
-
-        # Update resume table
-        if 'user_phone' in personal_info or 'user_email' in personal_info:
-            set_clause = []
-            if 'user_phone' in personal_info:
-                set_clause.append("phone = :user_phone")
-                params['user_phone'] = personal_info['user_phone']
-            if 'user_email' in personal_info:
-                set_clause.append("email = :user_email")
-                params['user_email'] = personal_info['user_email']
-
-            if set_clause:
-                update_queries.append(f"""
-                    UPDATE resume 
-                    SET {', '.join(set_clause)} 
-                    WHERE user_id = (SELECT id FROM users WHERE username = :username) AND is_active = 1
-                """)
-
-        return update_queries, params
 
 
 if __name__ == '__main__':
