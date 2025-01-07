@@ -10,13 +10,6 @@ Link to website: [https://cmt120personalportfolio-cmt120-personal-portfolio.apps
 
 
 
-### Demo Video
-
-
-
-
-
-
 ### Instructions (Local Deployment)
 
 #### Clone the Code
