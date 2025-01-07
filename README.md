@@ -8,6 +8,33 @@ Link to website: [https://cmt120personalportfolio-cmt120-personal-portfolio.apps
 
 [c24022263_report.pdf](./c24022263_report.pdf)
 
+### References - Source Code:
+
+
+
+**Page Layout**
+
+The page layout is implemented using TailwindCSS, a utility-first CSS framework.
+You can learn more about TailwindCSS and how to install it by visiting the official installation guide:
+[TailwindCSSInstallationGuide](https://tailwindcss.com/docs/installation)
+
+**File Upload**
+
+The file upload functionality is implemented in Flask with `request.files` for handling file uploads.
+You can learn more about Flask's file upload feature by visiting the official documentation:
+[FlaskFileUploads](https://flask.palletsprojects.com/en/stable/patterns/fileuploads/)
+
+**Dependency Injection**
+
+The application uses the Python Dependency Injector library to manage dependencies, ensuring better modularity and testability.
+You can learn more about Python Dependency Injection by visiting the official documentation:
+[python-dependency-injectorDocumentation](https://python-dependency-injector.ets-labs.org/)
+
+**Database Connection Pool**
+
+The SQLite connection pool manages database connections efficiently to prevent overloading the database.
+You can learn more about SQLite and its usage in Python by visiting the official SQLite documentation:
+[SQLite3Documentation](https://docs.python.org/3/library/sqlite3.html)
 
 
 ### Instructions (Local Deployment)
