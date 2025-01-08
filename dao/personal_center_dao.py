@@ -42,8 +42,7 @@ class personal_center_dao:
         INSERT INTO messages (user_id, webpage_id, name, email, message)
         VALUES (1, 1, ?, ?, ?)
     """
-    
- 
+
     def _convert_to_dict(self, cursor):
         """
         Convert query results to a list of dictionaries.
