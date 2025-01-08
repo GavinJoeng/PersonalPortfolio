@@ -93,14 +93,14 @@ class personal_center_service:
 
     def send_msg(self, msg):
         try:
-            # 進行輸入驗證（可選）
-            required_fields = ["user_id", "webpage_id", "name", "email", "message"]
+           # 進行輸入驗證（可選）
+            required_fields = ["name", "email", "message"]
             if not all(field in msg for field in required_fields):
                 print("Error: Missing required fields in input.")
                 return False
 
             # 將字典轉換為元組
-            msg_tuple = (msg['user_id'], msg['webpage_id'], msg['name'], msg['email'], msg['message'])
+            msg_tuple = (msg['name'], msg['email'], msg['message'])
 
             success = self.personal_dao.send_msg(msg_tuple)
             if not success:
