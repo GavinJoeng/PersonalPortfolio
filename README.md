@@ -4,6 +4,11 @@ Username: c24022263
 
 Link to website: [https://cmt120personalportfolio-cmt120-personal-portfolio.apps.containers.cs.cf.ac.uk/](https://cmt120personalportfolio-cmt120-personal-portfolio.apps.containers.cs.cf.ac.uk/)
 
+### Website test account password
+username: gavinjoeng
+password: Joeng97@0
+Due to time limits, couldn't finish the feature that assigns different homepage URLs to users, so the current project only shows my portfolio.
+
 ### Report on Website’s Security, Quality, and Usability
 
 [c24022263_report.pdf](./c24022263_report.pdf)
