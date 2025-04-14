@@ -52,7 +52,7 @@ You need to create a folder to get the GitLab project and use the following comm
 
 ```shell
 git init
-git clone git@git.cardiff.ac.uk:c24022263/c24022263_cmt120.git
+git clone https://github.com/GavinJoeng/PersonalPortfolio.git
 ```
 
 #### Install Dependencies
