@@ -2,7 +2,7 @@
 ## CMT120 Coursework 2 - Dynamic Website
 Username: c24022263
 
-Link to website: [https://cmt120personalportfolio-cmt120-personal-portfolio.apps.containers.cs.cf.ac.uk/](https://cmt120personalportfolio-cmt120-personal-portfolio.apps.containers.cs.cf.ac.uk/)
+Link to website: https://personalportfolio-pilh.onrender.com
 
 ### Website test account password
 username: gavinjoeng
@@ -52,7 +52,7 @@ You need to create a folder to get the GitLab project and use the following comm
 
 ```shell
 git init
-git clone git@git.cardiff.ac.uk:c24022263/c24022263_cmt120.git
+git clone https://github.com/GavinJoeng/PersonalPortfolio.git
 ```
 
 #### Install Dependencies
