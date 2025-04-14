@@ -6,19 +6,18 @@ from controllers.projects_controller import projects_dp
 from controllers.resume_controller import resume_bp
 from controllers.upload_controller import upload_bp
 from controllers.login_controller import login_bp
-app = Flask(__name__)
-
-# 啟用 CORS 支持，指定允許的來源
-CORS(app, resources={r"/api/*": {"origins": ["https://your-frontend.com"]}})
 
 # 註冊 Blueprint
 def create_app():
     app = Flask(__name__, template_folder="templates")
+    # 啟用 CORS 支持，指定允許的來源
+    CORS(app, resources={r"/api/*": {"origins": ["https://your-frontend.com"]}})
     app.register_blueprint(resume_bp, url_prefix="/api")
     app.register_blueprint(upload_bp, url_prefix="/api")
     app.register_blueprint(login_bp, url_prefix="/api")
     app.register_blueprint(projects_dp, url_prefix="/api")
     app.register_blueprint(personal_center_dp, url_prefix="/api")
+
 
     # 添加根路徑渲染 index.html
     @app.route('/')
@@ -41,4 +40,4 @@ def create_app():
 
 if __name__ == '__main__':
     app = create_app()
-    app.run(host="0.0.0.0", port=8080, debug=True)
+    app.run(host="0.0.0.0", port=8081, debug=True)
